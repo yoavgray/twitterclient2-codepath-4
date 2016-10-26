@@ -1,0 +1,89 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:background="@color/colorPrimary"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".LoginActivity" >
+
+    <ImageView
+        android:id="@+id/image_view_twitter_logo"
+        android:src="@drawable/twitter_logo_white_on_blue"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="28dp"
+        />
+
+    <TextView
+        android:id="@+id/text_view_welcome_to_tweeter"
+        android:text="@string/welcome_to_tweeter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:fontFamily="Arial"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/image_view_twitter_logo"
+        android:layout_alignLeft="@+id/image_view_twitter_logo"
+        android:layout_alignStart="@+id/image_view_twitter_logo"
+        android:layout_marginTop="64dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginBottom="16dp"
+        />
+
+    <TextView
+        android:id="@+id/text_view_see_whats_happening"
+        android:text="@string/see_whats_happening"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/text_view_welcome_to_tweeter"
+        android:layout_alignLeft="@+id/text_view_welcome_to_tweeter"
+        android:layout_alignStart="@+id/text_view_welcome_to_tweeter"
+        />
+
+    <Button
+        android:id="@+id/button_signup"
+        android:textColor="@color/colorPrimary"
+        android:onClick="signUpToRest"
+        android:text="@string/signup_label"
+        android:background="@drawable/drawable_white_background"
+        android:layout_above="@+id/button_login"
+        android:layout_marginBottom="18dp"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:fontFamily="Arial"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <Button
+        android:id="@+id/button_login"
+        android:textColor="@android:color/white"
+        android:onClick="loginToRest"
+        android:text="@string/login_label"
+        android:background="@drawable/drawable_transparent_background_white_border"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="38dp"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:fontFamily="Arial"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_centerHorizontal="true"
+        />
+
+</RelativeLayout>

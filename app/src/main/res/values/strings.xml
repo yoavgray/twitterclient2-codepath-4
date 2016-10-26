@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Twittoosh</string>
+    <string name="login_label">Log in</string>
+    <string name="title_activity_feed">FeedActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="welcome_to_tweeter">Welcome to Twitter</string>
+    <string name="see_whats_happening">See what\'s happening in the world right now</string>
+    <string name="signup_label">Sign up</string>
+
+</resources>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                               android:layout_width="match_parent"
+                                               android:layout_height="match_parent"
+                                               xmlns:app="http://schemas.android.com/apk/res-auto"
+                                               xmlns:tools="http://schemas.android.com/tools"
+                                               android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                                               android:layout_marginRight="@dimen/activity_horizontal_margin"
+                                               android:layout_marginTop="@dimen/activity_vertical_margin"
+                                               android:layout_marginBottom="@dimen/activity_vertical_margin"
+    >
+    
+    <ImageView
+        android:id="@+id/image_view_user_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher"
+        app:layout_widthPercent="30%"
+        app:layout_heightPercent="50%"/>
+
+    <TextView
+        tools:text="Yoav Gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/image_view_user_profile"
+        android:layout_toEndOf="@+id/image_view_user_profile"
+        android:layout_marginLeft="@dimen/tweet_title_horiz_margin"
+        android:layout_marginStart="@dimen/tweet_title_horiz_margin"
+        android:id="@+id/text_view_user_name"
+        />
+
+    <TextView
+        tools:text="\@kaki"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/text_view_user_name"
+        android:layout_toEndOf="@+id/text_view_user_name"
+        android:layout_marginLeft="@dimen/tweet_title_horiz_margin"
+        android:layout_marginStart="@dimen/tweet_title_horiz_margin"
+        android:id="@+id/text_view_user_nickname"
+        />
+
+</android.support.percent.PercentRelativeLayout>
