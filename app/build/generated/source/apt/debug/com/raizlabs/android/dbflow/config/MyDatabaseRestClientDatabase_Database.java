@@ -1,8 +1,8 @@
 package com.raizlabs.android.dbflow.config;
 
 import com.yoav.twitterclient.MyDatabase;
-import com.yoav.twitterclient.models.SampleModel;
-import com.yoav.twitterclient.models.SampleModel_Adapter;
+import com.yoav.twitterclient.models.Tweet;
+import com.yoav.twitterclient.models.Tweet_Adapter;
 import java.lang.Class;
 import java.lang.Override;
 import java.lang.String;
@@ -11,10 +11,10 @@ import java.lang.String;
  * This is generated code. Please do not modify */
 public final class MyDatabaseRestClientDatabase_Database extends DatabaseDefinition {
   public MyDatabaseRestClientDatabase_Database(DatabaseHolder holder) {
-    holder.putDatabaseForTable(SampleModel.class, this);
-    models.add(SampleModel.class);
-    modelTableNames.put("SampleModel", SampleModel.class);
-    modelAdapters.put(SampleModel.class, new SampleModel_Adapter(holder, this));
+    holder.putDatabaseForTable(Tweet.class, this);
+    models.add(Tweet.class);
+    modelTableNames.put("Tweet", Tweet.class);
+    modelAdapters.put(Tweet.class, new Tweet_Adapter(holder, this));
   }
 
   @Override

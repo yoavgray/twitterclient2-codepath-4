@@ -5,33 +5,46 @@
     density="xxhdpi"
     format="8"
     plugin-version="2.2.2"
-    timestamp="75299460819009"
+    timestamp="123413648419535"
     token="-3777372750381082420"
-    verifier="FULL_BUILD_REQUESTED" >
+    verifier="COLD_SWAP_REQUESTED" >
 
     <task
         name="javac"
-        duration="1499" />
+        duration="532" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="161" />
+        duration="10" />
     <task
         name="verifier"
-        duration="7" />
+        duration="1" />
 
     <artifact
-        location="/Users/yoavgray/twitterclient-codepath-3/app/build/outputs/apk/app-debug.apk"
-        type="MAIN" />
+        location="/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_9/classes.dex"
+        type="DEX" />
+    <artifact
+        location="/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_6/classes.dex"
+        type="DEX" />
 
     <build
-        timestamp="75299460819009"
+        timestamp="123255107094088"
         verifier="FULL_BUILD_REQUESTED" >
         <artifact
             location="/Users/yoavgray/twitterclient-codepath-3/app/build/outputs/apk/app-debug.apk"
             type="MAIN" />
+    </build>
+    <build
+        timestamp="123413648419535"
+        verifier="COLD_SWAP_REQUESTED" >
+        <artifact
+            location="/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_9/classes.dex"
+            type="DEX" />
+        <artifact
+            location="/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_6/classes.dex"
+            type="DEX" />
     </build>
 
 </instant-run>

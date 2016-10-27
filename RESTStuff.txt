@@ -8,7 +8,7 @@ Endpoints:
 
 	- Create a new tweet (compose)
 
-	[
+[
   {
     "coordinates": null,
     "truncated": false,

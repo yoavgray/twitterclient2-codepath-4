@@ -40,16 +40,16 @@
         "source": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/color/abc_tint_edittext.xml"
     },
     {
-        "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/color/abc_tint_spinner.xml",
-        "source": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/color/abc_tint_spinner.xml"
-    },
-    {
         "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/color/abc_tint_btn_checkable.xml",
         "source": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/color/abc_tint_btn_checkable.xml"
     },
     {
         "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/color/abc_tint_switch_track.xml",
         "source": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/color/abc_tint_switch_track.xml"
+    },
+    {
+        "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/color/abc_tint_spinner.xml",
+        "source": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/color/abc_tint_spinner.xml"
     },
     {
         "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/color/abc_primary_text_material_light.xml",
