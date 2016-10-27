@@ -31,9 +31,27 @@ public class Tweet extends BaseModel {
 	User user;
 
 	public Tweet() {}
-//	public Tweet() {
-//		super();
-//	}
+
+	public Long getTweetId() {
+		return tweetId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getCreatedAt() {
+		return created_at;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
 //
 //	// Add a constructor that creates an object from the JSON response
 //	public Tweet(JSONObject object){

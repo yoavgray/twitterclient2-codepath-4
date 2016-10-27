@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+    >
+
+    <ImageView
+        android:id="@+id/image_view_profile_photo"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        />
+
+    <TextView
+        android:id="@+id/text_view_user_name"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/image_view_profile_photo"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="-4dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_alignTop="@id/image_view_profile_photo"
+        tools:text="Yoav Gray"
+        />
+
+    <TextView
+        android:id="@+id/text_view_user_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/text_view_user_name"
+        android:layout_marginLeft="8dp"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp"
+        android:layout_alignTop="@id/text_view_user_name"
+        tools:text="\@yoavibavi"
+        />
+
+    <TextView
+        android:id="@+id/text_view_when_published"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="4dp"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp"
+        android:layout_alignTop="@id/text_view_user_nickname"
+        tools:text="19h"
+        />
+
+    <TextView
+        android:id="@+id/text_view_tweet_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_user_name"
+        android:layout_alignLeft="@id/text_view_user_name"
+        android:layout_marginTop="4dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        tools:text="look what I got to say!!!"
+        />
+</RelativeLayout>

@@ -133,7 +133,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="5580ac1ef37435507527c3d9869b6cc320fbf24a">
+        sha1="cfc6e30e739f3ca70e997667866340878e241f32">
         <dex dex="/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_c7aa601fab5ccdc42b021c3ff80eafca30d94172/classes.dex" />
     </item>
     <item
@@ -241,7 +241,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="79d894d9c9c959f693eac1ced1aabc8f4cb0f899">
+        sha1="b02f197d82eac3f41acd2ce73811fe912528f449">
         <dex dex="/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_6be32ad2aed0ffe4b140f9efbea98704cc79f4b2/classes.dex" />
     </item>
     <item

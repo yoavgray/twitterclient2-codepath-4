@@ -5,38 +5,57 @@ import org.parceler.Parcel;
 @Parcel
 public class User {
 
-    String name;
-    String profile_background_tile;
-    Boolean profileBackgroundTile;
-    String profile_image_url;
-    String created_at;
-    String location;
-    Boolean follow_request_sent;
-    String id_str;
-    Boolean isTranslator;
-    Entities entities;
-    Boolean default_profile;
-    String url;
-    Integer favourites_count;
-    Integer utc_offset;
-    String profile_image_url_https;
-    Long id;
-    Integer listed_count;
-    Boolean profile_use_background_image;
-    String profile_text_color;
-    Integer followers_count;
-    String lang;
-    Boolean notifications;
-    String description;
-    String profile_background_color;
-    Boolean verified;
-    String time_zone;
-    String profile_background_image_url_https;
-    Integer statuses_count;
-    String profile_background_image_url;
-    Boolean default_profile_image;
-    Integer friends_count;
-    Boolean following;
-    String screen_name;
+    private String name;
+    private String profile_background_tile;
+    private Boolean profileBackgroundTile;
+    private String profile_image_url;
+    private String created_at;
+    private String location;
+    private Boolean follow_request_sent;
+    private String id_str;
+    private Boolean isTranslator;
+    private Entities entities;
+    private Boolean default_profile;
+    private String url;
+    private Integer favourites_count;
+    private Integer utc_offset;
+    private String profile_image_url_https;
+    private Long id;
+    private Integer listed_count;
+    private Boolean profile_use_background_image;
+    private String profile_text_color;
+    private Integer followers_count;
+    private String lang;
+    private Boolean notifications;
+    private String description;
+    private String profile_background_color;
+    private Boolean verified;
+    private String time_zone;
+    private String profile_background_image_url_https;
+    private Integer statuses_count;
+    private String profile_background_image_url;
+    private Boolean default_profile_image;
+    private Integer friends_count;
+    private Boolean following;
+    private String screen_name;
 
+    public String getName() {
+        return name;
+    }
+
+    public String getPublishTime() {
+        return created_at;
+    }
+
+    public String getNickname() {
+        return screen_name;
+    }
+
+    public String getProfileImageUrl() {
+        return profile_image_url;
+    }
 }
+
+
+
+

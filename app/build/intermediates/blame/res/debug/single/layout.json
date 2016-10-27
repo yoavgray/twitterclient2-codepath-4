@@ -8,8 +8,8 @@
         "source": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/exploded-aar/com.android.support/design/24.2.1/res/layout/design_text_input_password_icon.xml"
     },
     {
-        "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/fragment_feed.xml",
-        "source": "/Users/yoavgray/twitterclient-codepath-3/app/src/main/res/layout/fragment_feed.xml"
+        "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/retweet_feed_item.xml",
+        "source": "/Users/yoavgray/twitterclient-codepath-3/app/src/main/res/layout/retweet_feed_item.xml"
     },
     {
         "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/abc_list_menu_item_checkbox.xml",
@@ -24,6 +24,10 @@
         "source": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/layout/abc_search_view.xml"
     },
     {
+        "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/image_tweet_feed_item.xml",
+        "source": "/Users/yoavgray/twitterclient-codepath-3/app/src/main/res/layout/image_tweet_feed_item.xml"
+    },
+    {
         "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/abc_screen_toolbar.xml",
         "source": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/layout/abc_screen_toolbar.xml"
     },
@@ -34,10 +38,6 @@
     {
         "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/abc_popup_menu_header_item_layout.xml",
         "source": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/layout/abc_popup_menu_header_item_layout.xml"
-    },
-    {
-        "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/content_feed.xml",
-        "source": "/Users/yoavgray/twitterclient-codepath-3/app/src/main/res/layout/content_feed.xml"
     },
     {
         "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/design_layout_snackbar_include.xml",
@@ -60,6 +60,10 @@
         "source": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/layout/abc_action_menu_layout.xml"
     },
     {
+        "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/text_tweet_feed_item.xml",
+        "source": "/Users/yoavgray/twitterclient-codepath-3/app/src/main/res/layout/text_tweet_feed_item.xml"
+    },
+    {
         "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/design_navigation_menu.xml",
         "source": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/exploded-aar/com.android.support/design/24.2.1/res/layout/design_navigation_menu.xml"
     },
@@ -74,10 +78,6 @@
     {
         "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/select_dialog_singlechoice_material.xml",
         "source": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/layout/select_dialog_singlechoice_material.xml"
-    },
-    {
-        "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/feed_list_item.xml",
-        "source": "/Users/yoavgray/twitterclient-codepath-3/app/src/main/res/layout/feed_list_item.xml"
     },
     {
         "merged": "/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/merged/debug/layout/notification_template_lines.xml",
