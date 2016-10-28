@@ -3,6 +3,7 @@ package com.yoav.twitterclient.activities;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +38,7 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 
 public class FeedActivity extends AppCompatActivity implements ComposeTweetFragment.TweetComposedListener {
+    @BindView(R.id.swipe_refresh_container) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.recycler_view_feed) RecyclerView feedRecyclerView;
     @BindView(R.id.fab_compose_tweet) FloatingActionButton composeFab;
@@ -54,9 +56,10 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
 
         setFeedRecyclerView();
         setRecyclerViewsListeners();
+        setupSwipeRefreshLayout();
 
         client = TwitterApplication.getRestClient();
-        loadTweets();
+        loadTweets(1);
     }
 
     private void setRecyclerViewsListeners() {
@@ -86,9 +89,27 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
 
-
+                int i = 4;
             }
         });
+    }
+
+    /**
+     * This method sets the SwipeRefreshLayout on start
+     */
+    private void setupSwipeRefreshLayout() {
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        loadTweets(1);
+                    }
+                });
+        // Configure the refreshing colors
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     @OnClick(R.id.fab_compose_tweet)
@@ -103,7 +124,7 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
 //        client.postTweet(tweet, new JsonHttpResponseHandler() {
 //            @Override
 //            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-//                loadTweets();
+//                loadTweets(1);
 //            }
 //
 //            @Override
@@ -115,8 +136,8 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
 //        });
     }
 
-    public void loadTweets() {
-        client.getHomeTimeline(1, new JsonHttpResponseHandler() {
+    public void loadTweets(int page) {
+        client.getHomeTimeline(page, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Gson gson = new GsonBuilder().create();
@@ -124,6 +145,7 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
                 tweetsList.clear();
                 tweetsList.addAll(Arrays.asList(tweets));
                 tweetsAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -131,6 +153,7 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 Toast.makeText(getBaseContext(), "Failed: " + errorResponse.toString(), Toast.LENGTH_LONG).show();
                 Log.d("ON_FAILURE", errorResponse.toString());
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
