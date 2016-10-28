@@ -5,64 +5,33 @@
     density="xxhdpi"
     format="8"
     plugin-version="2.2.2"
-    timestamp="128300477531752"
+    timestamp="128749725699600"
     token="-3777372750381082420"
-    verifier="COMPATIBLE" >
+    verifier="FULL_BUILD_REQUESTED" >
 
     <task
         name="javac"
-        duration="0" />
+        duration="740" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="0" />
+        duration="156" />
     <task
         name="verifier"
-        duration="0" />
+        duration="26" />
 
     <artifact
-        location="/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/instant-run-resources/resources-debug.ir.ap_"
-        type="RESOURCES" />
+        location="/Users/yoavgray/twitterclient-codepath-3/app/build/outputs/apk/app-debug.apk"
+        type="MAIN" />
 
     <build
-        timestamp="128027717393358"
+        timestamp="128749725699600"
         verifier="FULL_BUILD_REQUESTED" >
         <artifact
             location="/Users/yoavgray/twitterclient-codepath-3/app/build/outputs/apk/app-debug.apk"
             type="MAIN" />
-    </build>
-    <build
-        timestamp="128147045874729"
-        verifier="COLD_SWAP_REQUESTED" >
-        <artifact
-            location="/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_9/classes.dex"
-            type="DEX" />
-        <artifact
-            location="/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_3/classes.dex"
-            type="DEX" />
-    </build>
-    <build
-        timestamp="128196134611202"
-        verifier="COMPATIBLE" >
-        <artifact
-            location="/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/builds/debug/128196134611202/classes.dex"
-            type="RELOAD_DEX" />
-    </build>
-    <build
-        timestamp="128269460208940"
-        verifier="COMPATIBLE" >
-        <artifact
-            location="/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/builds/debug/128269460208940/classes.dex"
-            type="RELOAD_DEX" />
-    </build>
-    <build
-        timestamp="128300477531752"
-        verifier="COMPATIBLE" >
-        <artifact
-            location="/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/instant-run-resources/resources-debug.ir.ap_"
-            type="RESOURCES" />
     </build>
 
 </instant-run>

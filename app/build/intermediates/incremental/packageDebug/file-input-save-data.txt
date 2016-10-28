@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Thu Oct 27 02:31:51 PDT 2016
+#Thu Oct 27 02:43:54 PDT 2016
 210.set=ANDROID_RESOURCE
 14.set=ANDROID_RESOURCE
 180.file=/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/res/resources-debug.ap_/res/drawable-xxhdpi-v4/abc_ic_commit_search_api_mtrl_alpha.png
