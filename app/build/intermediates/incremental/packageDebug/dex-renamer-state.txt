@@ -1,7 +1,0 @@
-#Thu Oct 27 02:43:54 PDT 2016
-base.0=/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_c7aa601fab5ccdc42b021c3ff80eafca30d94172
-renamed.1=classes2.dex
-renamed.0=classes.dex
-file.1=/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_6be32ad2aed0ffe4b140f9efbea98704cc79f4b2/classes.dex
-base.1=/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_6be32ad2aed0ffe4b140f9efbea98704cc79f4b2
-file.0=/Users/yoavgray/twitterclient-codepath-3/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_c7aa601fab5ccdc42b021c3ff80eafca30d94172/classes.dex
