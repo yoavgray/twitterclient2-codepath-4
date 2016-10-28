@@ -1,4 +1,4 @@
-package com.yoav.twitterclient;
+package com.yoav.twitterclient.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,19 +6,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.models.User;
 import com.yoav.twitterclient.viewholders.ImageTweetViewHolder;
 import com.yoav.twitterclient.viewholders.RetweetViewHolder;
 import com.yoav.twitterclient.viewholders.TextTweetViewHolder;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class TweetsAdapter extends
         RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public final static String NYTIMES_URL = "http://www.nytimes.com/";
+    public final static int HOUR = 60;
+    public final static int DAY = HOUR * 24;
+    public final static int MONTH = DAY * 30;
 
     private final int TEXT = 0, IMAGE = 1, RETWEET = 2;
 
@@ -93,15 +101,35 @@ public class TweetsAdapter extends
         final User user = tweet.getUser();
 
         if (tweet != null) {
-            Picasso.with(getContext()).load(user.getProfileImageUrl()).
-                    noFade().fit().into(holder.getProfileImageView());
+            Glide.with(getContext()).load(user.getProfileImageUrl()).into(holder.getProfileImageView());
             holder.getUserNameTextView().setText(user.getName());
             holder.getUserNicknameTextView().setText(user.getNickname());
-            holder.getWhenPublishedTextView().setText("1h");
-            holder.getWhenPublishedTextView().setText(tweet.getCreatedAt());
+            holder.getWhenPublishedTextView().setText(getPublishTimeOffset(tweet));
             holder.getTweetBodyTextView().setText(tweet.getText());
         }
     }
+
+    private String getPublishTimeOffset(Tweet tweet) {
+        DateFormat originalFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
+        Date date = null;
+        try {
+            date = originalFormat.parse(tweet.getCreatedAt());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date now = new Date();
+        long timeOffsetInMinutes = (now.getTime() - date.getTime()) / 1000 / 60;
+        if (timeOffsetInMinutes > MONTH) {
+            return "" + (timeOffsetInMinutes % MONTH) + "M";
+        } else if (timeOffsetInMinutes > DAY) {
+            return "" + (timeOffsetInMinutes % DAY) + "d";
+        } else if (timeOffsetInMinutes > HOUR) {
+            return "" + (timeOffsetInMinutes % HOUR) + "h";
+        } else {
+            return "" + timeOffsetInMinutes + "m";
+        }
+    }
+
     private void configureTextTweetViewHolder(TextTweetViewHolder holder, int position) {
         final Tweet tweet = tweets.get(position);
 

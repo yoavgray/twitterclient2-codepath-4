@@ -1,8 +1,10 @@
-package com.yoav.twitterclient;
+package com.yoav.twitterclient.utils;
 
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.yoav.twitterclient.R;
 
 /*
   Source: http://www.littlerobots.nl/blog/Handle-Android-RecyclerView-Clicks/

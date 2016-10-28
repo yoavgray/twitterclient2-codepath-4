@@ -8,5 +8,7 @@
     <string name="welcome_to_tweeter">Welcome to Twitter</string>
     <string name="see_whats_happening">See what\'s happening in the world right now</string>
     <string name="signup_label">Sign up</string>
+    <string name="ask_a_question">Ask a question...</string>
+    <string name="tweet_label">Tweet</string>
 
 </resources>

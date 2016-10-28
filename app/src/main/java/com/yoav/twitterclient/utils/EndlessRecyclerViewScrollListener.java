@@ -1,4 +1,4 @@
-package com.yoav.twitterclient;
+package com.yoav.twitterclient.utils;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
