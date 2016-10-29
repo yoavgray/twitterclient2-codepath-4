@@ -104,30 +104,10 @@ public class TweetsAdapter extends
         if (tweet != null) {
             Glide.with(getContext()).load(user.getProfileImageUrl()).into(holder.getProfileImageView());
             holder.getUserNameTextView().setText(user.getName());
-            holder.getUserNicknameTextView().setText(user.getNickname());
+            String nickname = "@" + user.getNickname();
+            holder.getUserNicknameTextView().setText(nickname);
             holder.getWhenPublishedTextView().setText(getRelativeTimeAgo(tweet.getCreatedAt()));
             holder.getTweetBodyTextView().setText(tweet.getText());
-        }
-    }
-
-    private String getPublishTimeOffset(Tweet tweet) {
-        DateFormat originalFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
-        Date date = null;
-        try {
-            date = originalFormat.parse(tweet.getCreatedAt());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Date now = new Date();
-        long timeOffsetInMinutes = (now.getTime() - date.getTime()) / 1000 / 60;
-        if (timeOffsetInMinutes > MONTH) {
-            return "" + (timeOffsetInMinutes % MONTH) + "M";
-        } else if (timeOffsetInMinutes > DAY) {
-            return "" + (timeOffsetInMinutes % DAY) + "d";
-        } else if (timeOffsetInMinutes > HOUR) {
-            return "" + (timeOffsetInMinutes % HOUR) + "h";
-        } else {
-            return "" + timeOffsetInMinutes + "m";
         }
     }
 
@@ -144,7 +124,7 @@ public class TweetsAdapter extends
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
+        // Making the string look like "1h", "1m", etc.
         String[] relativeDateSplitted = relativeDate.split(" ");
         if (relativeDateSplitted[1].contains("minute")) {
             return relativeDateSplitted[0] + "m";
