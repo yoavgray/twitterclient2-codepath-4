@@ -10,5 +10,7 @@
     <string name="signup_label">Sign up</string>
     <string name="ask_a_question">Ask a question...</string>
     <string name="tweet_label">Tweet</string>
+    <string name="loading_tweets">Loading tweets!</string>
+    <string name="no_more_tweet">No more Tweet for you!!</string>
 
 </resources>

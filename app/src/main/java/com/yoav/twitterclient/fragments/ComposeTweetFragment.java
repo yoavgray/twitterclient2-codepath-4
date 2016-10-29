@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yoav.twitterclient.R;
 
@@ -19,11 +22,14 @@ import butterknife.OnClick;
 
 
 public class ComposeTweetFragment extends DialogFragment {
+    private static final String DRAFT_KEY = "draft";
+    private static final int TWEET_CHAR_SIZE = 140;
+
     @BindView(R.id.edit_text_tweet) EditText tweetEditText;
     @BindView(R.id.button_send_tweet) Button sendTweetButton;
     @BindView(R.id.text_view_character_counter) TextView counterTextView;
 
-    int counter = 140;
+    String draft = "";
 
     private TweetComposedListener selectionListener;
 
@@ -44,6 +50,17 @@ public class ComposeTweetFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            draft = savedInstanceState.getString(DRAFT_KEY);
+        }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(DRAFT_KEY, tweetEditText.getText().toString());
+        super.onSaveInstanceState(outState);
     }
 
     @OnClick(R.id.button_send_tweet)
@@ -65,12 +82,29 @@ public class ComposeTweetFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        beginDate    = getArguments().getString(BEGIN_DATE);
-//        endDate      = getArguments().getString(END_DATE);
-//        sortId       = getArguments().getInt(SORT_ID);
+        tweetEditText.setText(draft);
+        counterTextView.setText(String.valueOf(TWEET_CHAR_SIZE - draft.length()));
 
-//        beginDateTextView.setText(getNicerDateFormat(beginDate));
-//        endDateTextView.setText(getNicerDateFormat(endDate));
+        tweetEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                counterTextView.setText(String.valueOf(TWEET_CHAR_SIZE - s.length()));
+                if (s.length() == TWEET_CHAR_SIZE) {
+                    Toast.makeText(getActivity(), getString(R.string.no_more_tweet), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
     }
 
     @Override

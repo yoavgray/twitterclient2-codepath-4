@@ -10,13 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.fragments.ComposeTweetFragment;
-import com.yoav.twitterclient.utils.DividerItemDecoration;
 import com.yoav.twitterclient.utils.EndlessRecyclerViewScrollListener;
 import com.yoav.twitterclient.utils.ItemClickSupport;
 import com.yoav.twitterclient.R;
@@ -42,6 +42,7 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.recycler_view_feed) RecyclerView feedRecyclerView;
     @BindView(R.id.fab_compose_tweet) FloatingActionButton composeFab;
+    @BindView(R.id.relative_layout_loading_tweets) RelativeLayout loadingTweetsRelativeLayout;
 
     List<Tweet> tweetsList = new ArrayList<>();
     TweetsAdapter tweetsAdapter;
@@ -81,15 +82,15 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
 
         // Attach the layout manager to the recycler view
         feedRecyclerView.setLayoutManager(linearLayoutManager);
-            RecyclerView.ItemDecoration itemDecoration = new
-                    DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-        feedRecyclerView.addItemDecoration(itemDecoration);
+//            RecyclerView.ItemDecoration itemDecoration = new
+//                    DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+//        feedRecyclerView.addItemDecoration(itemDecoration);
 
         feedRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-
-                int i = 4;
+                loadingTweetsRelativeLayout.setVisibility(View.VISIBLE);
+                loadTweets(page + 1);
             }
         });
     }
@@ -136,24 +137,28 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
 //        });
     }
 
-    public void loadTweets(int page) {
+    public void loadTweets(final int page) {
         client.getHomeTimeline(page, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Gson gson = new GsonBuilder().create();
                 Tweet[] tweets = gson.fromJson(response.toString(), Tweet[].class);
-                tweetsList.clear();
+                if (page == 1) tweetsList.clear();
                 tweetsList.addAll(Arrays.asList(tweets));
                 tweetsAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
+                loadingTweetsRelativeLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                Toast.makeText(getBaseContext(), "Failed: " + errorResponse.toString(), Toast.LENGTH_LONG).show();
+                if (errorResponse != null) {
+                    Toast.makeText(getBaseContext(), "Failed: " + errorResponse.toString(), Toast.LENGTH_LONG).show();
+                }
                 Log.d("ON_FAILURE", errorResponse.toString());
                 swipeRefreshLayout.setRefreshing(false);
+                loadingTweetsRelativeLayout.setVisibility(View.GONE);
             }
         });
     }

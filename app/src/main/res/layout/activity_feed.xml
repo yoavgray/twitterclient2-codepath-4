@@ -1,31 +1,33 @@
 <android.support.v4.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipe_refresh_container"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/main_content"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appBar"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways" />
+    </android.support.design.widget.AppBarLayout>
 
-        </android.support.design.widget.AppBarLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_feed"
@@ -45,6 +47,42 @@
             app:layout_anchor="@id/recycler_view_feed"
             app:layout_anchorGravity="bottom|right|end" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    <RelativeLayout
+        android:id="@+id/relative_layout_loading_tweets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@android:color/white"
+        >
 
-</android.support.v4.widget.SwipeRefreshLayout>
+        <TextView
+            android:id="@+id/text_view_loading_more_tweets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loading_tweets"
+            android:textSize="20sp"
+            android:fontFamily="Arial"
+            android:textStyle="italic"
+            android:background="@android:color/white"
+            android:textColor="@color/colorAccent"
+            android:gravity="center_vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_loading_tweets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_toRightOf="@id/text_view_loading_more_tweets"
+            android:layout_alignTop="@id/text_view_loading_more_tweets"
+            android:layout_alignParentBottom="true"
+            tools:visibility="visible"
+            />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
