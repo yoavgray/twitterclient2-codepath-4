@@ -1,8 +1,6 @@
 package com.yoav.twitterclient.models;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
@@ -10,26 +8,52 @@ import java.util.List;
 
 @Parcel
 public class Url {
-    @SerializedName("urls")
-    @Expose
-    private List<Url_> urls = new ArrayList<Url_>();
+
+    private String url;
+    private String expanded_url;
+    private String display_url;
+    private List<Integer> indices = new ArrayList<>();
 
     /**
+     * No args constructor for use in serialization
      *
-     * @return
-     * The urls
      */
-    public List<Url_> getUrls() {
-        return urls;
+    public Url() {
     }
 
     /**
      *
-     * @param urls
-     * The urls
+     * @param displayUrl
+     * @param indices
+     * @param expandedUrl
+     * @param url
      */
-    public void setUrls(List<Url_> urls) {
-        this.urls = urls;
+    public Url(String url, String expandedUrl, String displayUrl, List<Integer> indices) {
+        this.url = url;
+        this.expanded_url = expandedUrl;
+        this.display_url = displayUrl;
+        this.indices = indices;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getExpandedUrl() {
+        return expanded_url;
+    }
+
+    public String getDisplayUrl() {
+        return display_url;
+    }
+
+    public List<Integer> getIndices() {
+        return indices;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

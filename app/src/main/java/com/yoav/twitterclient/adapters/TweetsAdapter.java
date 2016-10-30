@@ -9,18 +9,19 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.yoav.twitterclient.R;
+import com.yoav.twitterclient.models.ExtendedEntities;
+import com.yoav.twitterclient.models.Medium;
 import com.yoav.twitterclient.models.Tweet;
+import com.yoav.twitterclient.models.Url;
 import com.yoav.twitterclient.models.User;
-import com.yoav.twitterclient.viewholders.ImageTweetViewHolder;
-import com.yoav.twitterclient.viewholders.RetweetViewHolder;
-import com.yoav.twitterclient.viewholders.TextTweetViewHolder;
+import com.yoav.twitterclient.viewholders.TweetViewHolder;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 
 public class TweetsAdapter extends
@@ -29,7 +30,7 @@ public class TweetsAdapter extends
     public final static int DAY = HOUR * 24;
     public final static int MONTH = DAY * 30;
 
-    private final int TEXT = 0, IMAGE = 1, RETWEET = 2;
+    private final int VIDEO = 0, REGULAR = 1;
 
     // Store a member variable for the contacts
     private List<Tweet> tweets;
@@ -53,8 +54,7 @@ public class TweetsAdapter extends
 
     @Override
     public int getItemViewType(int position) {
-        // Decide what kind of TYPE should i return
-        return IMAGE;
+        return REGULAR;
     }
 
     @Override
@@ -63,21 +63,13 @@ public class TweetsAdapter extends
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 
         switch (viewType) {
-            case RETWEET:
-                View v1 = inflater.inflate(R.layout.retweet_feed_item, viewGroup, false);
-                viewHolder = new RetweetViewHolder(v1);
-                break;
-            case IMAGE:
-                View v2 = inflater.inflate(R.layout.image_tweet_feed_item, viewGroup, false);
-                viewHolder = new ImageTweetViewHolder(v2);
-                break;
-            case TEXT:
-                View v3 = inflater.inflate(R.layout.text_tweet_feed_item, viewGroup, false);
-                viewHolder = new TextTweetViewHolder(v3);
+            case REGULAR:
+                View v1 = inflater.inflate(R.layout.regular_tweet_feed_item, viewGroup, false);
+                viewHolder = new TweetViewHolder(v1);
                 break;
             default:
-                View v4 = inflater.inflate(R.layout.text_tweet_feed_item, viewGroup, false);
-                viewHolder = new TextTweetViewHolder(v4);
+                View v2 = inflater.inflate(R.layout.regular_tweet_feed_item, viewGroup, false);
+                viewHolder = new TweetViewHolder(v2);
                 break;
         }
         return viewHolder;
@@ -86,29 +78,54 @@ public class TweetsAdapter extends
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()) {
-            case IMAGE:
-                ImageTweetViewHolder imageViewHolder = (ImageTweetViewHolder) viewHolder;
+            case REGULAR:
+                TweetViewHolder imageViewHolder = (TweetViewHolder) viewHolder;
                 configureImageTweetViewHolder(imageViewHolder, position);
-                break;
-            case TEXT:
-                TextTweetViewHolder textViewHolder = (TextTweetViewHolder) viewHolder;
-                configureTextTweetViewHolder(textViewHolder, position);
                 break;
         }
     }
 
-    private void configureImageTweetViewHolder(ImageTweetViewHolder holder, int position) {
+    private void configureImageTweetViewHolder(TweetViewHolder holder, int position) {
         final Tweet tweet = tweets.get(position);
+        displayTweetEssentials(holder, tweet);
+
+    }
+
+    private void displayTweetEssentials(TweetViewHolder holder, Tweet tweet) {
         final User user = tweet.getUser();
 
-        if (tweet != null) {
-            Glide.with(getContext()).load(user.getProfileImageUrl()).into(holder.getProfileImageView());
-            holder.getUserNameTextView().setText(user.getName());
-            String nickname = "@" + user.getNickname();
-            holder.getUserNicknameTextView().setText(nickname);
-            holder.getWhenPublishedTextView().setText(getRelativeTimeAgo(tweet.getCreatedAt()));
-            holder.getTweetBodyTextView().setText(tweet.getText());
+        Glide.with(getContext()).load(user.getProfileImageUrl())
+                .bitmapTransform(new RoundedCornersTransformation(getContext(), 10, 10))
+                .fitCenter()
+                .into(holder.getProfileImageView());
+        holder.getUserNameTextView().setText(user.getName());
+        String nickname = "@" + user.getNickname();
+        holder.getUserNicknameTextView().setText(nickname);
+        holder.getWhenPublishedTextView().setText(getRelativeTimeAgo(tweet.getCreatedAt()));
+        String tweetBody = tweet.getText();
+
+        //Try removing a Twitter URL if present, though this may be null even if there's a URL
+        List<Url> urls = tweet.getEntities().getUrls();
+        for (int i = 0; urls != null && i < urls.size(); i++) {
+            String url = urls.get(i).getUrl();
+            if (url.contains("/t.co") && tweetBody.contains(url)) {
+                tweetBody = tweetBody.replace(url,urls.get(i).getExpandedUrl());
+            }
         }
+        ExtendedEntities extendedEntities = tweet.getExtendedEntities();
+        for (int i = 0; extendedEntities != null && i < extendedEntities.getMedia().size(); i++) {
+            Medium thisMedia = extendedEntities.getMedia().get(i);
+            if (i == 0) {
+                String imageUrl = thisMedia.getMediaUrlHttps();
+                Glide.with(getContext()).load(imageUrl).centerCrop()
+                        .bitmapTransform(new RoundedCornersTransformation(getContext(), 10, 10))
+                        .into(holder.getEmbeddedImageView());
+                holder.getEmbeddedImageView().setVisibility(View.VISIBLE);
+            }
+            tweetBody = tweetBody.replace(thisMedia.getUrl(),thisMedia.getDisplayUrl());
+        }
+
+        holder.getTweetBodyTextView().setText(tweetBody);
     }
 
     public String getRelativeTimeAgo(String rawJsonDate) {
@@ -126,7 +143,9 @@ public class TweetsAdapter extends
         }
         // Making the string look like "1h", "1m", etc.
         String[] relativeDateSplitted = relativeDate.split(" ");
-        if (relativeDateSplitted[1].contains("minute")) {
+        if (relativeDateSplitted[1].contains("second")) {
+            return (relativeDateSplitted[0] + "s");
+        } else if (relativeDateSplitted[1].contains("minute")) {
             return relativeDateSplitted[0] + "m";
         } else if (relativeDateSplitted[1].contains("hour")) {
             return relativeDateSplitted[0] + "h";
@@ -138,13 +157,4 @@ public class TweetsAdapter extends
             return relativeDateSplitted[0] + "y";
         }
     }
-
-    private void configureTextTweetViewHolder(TextTweetViewHolder holder, int position) {
-        final Tweet tweet = tweets.get(position);
-
-        if (tweet != null) {
-
-        }
-    }
-
 }

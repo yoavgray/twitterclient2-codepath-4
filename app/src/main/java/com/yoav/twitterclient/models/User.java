@@ -39,6 +39,14 @@ public class User {
     private Boolean following;
     private String screen_name;
 
+    public User() {}
+
+    public User(CurrentUser otherUser) {
+        name = otherUser.getName();
+        screen_name = otherUser.getScreenName();
+        profile_image_url = otherUser.getProfileImageUrl();
+    }
+
     public String getName() {
         return name;
     }
@@ -53,6 +61,18 @@ public class User {
 
     public String getProfileImageUrl() {
         return profile_image_url;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setProfileImageUrl(String profile_image_url) {
+        this.profile_image_url = profile_image_url;
+    }
+
+    public void setScreenName(String screen_name) {
+        this.screen_name = screen_name;
     }
 }
 

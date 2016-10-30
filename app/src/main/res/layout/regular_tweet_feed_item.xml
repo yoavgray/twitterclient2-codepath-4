@@ -6,7 +6,7 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
                 android:background="@drawable/drawable_transparent_blue_border_round_corners"
-                android:padding="4dp"
+                android:padding="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
     >
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/image_view_profile_photo"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="-4dp"
+        android:layout_marginTop="0dp"
         android:maxLines="1"
         android:textStyle="bold"
         android:textSize="16sp"
@@ -66,8 +66,21 @@
         android:layout_marginTop="4dp"
         android:textColor="@android:color/black"
         android:fontFamily="monospace"
+        android:autoLink="all"
         android:textStyle="bold"
         android:textSize="14sp"
+
         tools:text="look what I got to say!!!"
         />
+    
+    <ImageView
+        android:id="@+id/image_view_tweet_embedded_image"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/text_view_tweet_body"
+        android:layout_alignLeft="@id/text_view_tweet_body"
+        android:visibility="gone"
+        />
+
 </RelativeLayout>

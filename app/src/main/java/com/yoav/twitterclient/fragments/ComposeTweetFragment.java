@@ -2,6 +2,7 @@ package com.yoav.twitterclient.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -22,8 +23,10 @@ import butterknife.OnClick;
 
 
 public class ComposeTweetFragment extends DialogFragment {
+    public static final String PREFS_NAME = "PrefsFile";
     private static final String DRAFT_KEY = "draft";
     private static final int TWEET_CHAR_SIZE = 140;
+    SharedPreferences sharedPreferences;
 
     @BindView(R.id.edit_text_tweet) EditText tweetEditText;
     @BindView(R.id.button_send_tweet) Button sendTweetButton;
@@ -50,12 +53,13 @@ public class ComposeTweetFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
         if (savedInstanceState != null) {
             draft = savedInstanceState.getString(DRAFT_KEY);
+        } else {
+            draft = sharedPreferences.getString(DRAFT_KEY, "");
         }
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -67,6 +71,7 @@ public class ComposeTweetFragment extends DialogFragment {
     public void sendTweet() {
         if (selectionListener != null) {
             selectionListener.onTweetComposed(tweetEditText.getText().toString());
+            tweetEditText.setText("");
         }
         dismiss();
     }
@@ -83,7 +88,9 @@ public class ComposeTweetFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tweetEditText.setText(draft);
+        tweetEditText.setSelection(draft.length());
         counterTextView.setText(String.valueOf(TWEET_CHAR_SIZE - draft.length()));
+
 
         tweetEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -121,6 +128,7 @@ public class ComposeTweetFragment extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        sharedPreferences.edit().putString(DRAFT_KEY,tweetEditText.getText().toString()).apply();
         selectionListener = null;
     }
 

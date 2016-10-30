@@ -58,4 +58,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.android.support:customtabs:24.2.1'
     compile 'com.google.code.gson:gson:2.7'
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
+    compile 'com.github.danylovolokh:list-visibility-utils:0.2.0'
+    compile 'com.github.danylovolokh:video-player-manager:0.2.0'
 }

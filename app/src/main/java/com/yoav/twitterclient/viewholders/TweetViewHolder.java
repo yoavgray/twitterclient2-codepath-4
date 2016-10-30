@@ -10,17 +10,17 @@ import com.yoav.twitterclient.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
-public class ImageTweetViewHolder extends RecyclerView.ViewHolder {
+public class TweetViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.image_view_profile_photo) ImageView profileImageView;
     @BindView(R.id.text_view_user_name) TextView userNameTextView;
     @BindView(R.id.text_view_user_nickname) TextView userNicknameTextView;
     @BindView(R.id.text_view_when_published) TextView whenPublishedTextView;
     @BindView(R.id.text_view_tweet_body) TextView tweetBodyTextView;
+    @BindView(R.id.image_view_tweet_embedded_image) ImageView embeddedImageView;
 
     // We also create a constructor that accepts the entire item row
     // and does the view lookups to find each subview
-    public ImageTweetViewHolder(View itemView) {
+    public TweetViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
@@ -45,5 +45,7 @@ public class ImageTweetViewHolder extends RecyclerView.ViewHolder {
         return tweetBodyTextView;
     }
 
-
+    public ImageView getEmbeddedImageView() {
+        return embeddedImageView;
+    }
 }
