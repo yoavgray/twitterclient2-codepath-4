@@ -22,10 +22,6 @@ public class TwitterApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
-		FlowManager.init(new FlowConfig.Builder(this).build());
-		FlowLog.setMinimumLoggingLevel(FlowLog.Level.V);
-
 		TwitterApplication.context = this;
 	}
 

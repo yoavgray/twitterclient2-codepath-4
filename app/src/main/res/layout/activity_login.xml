@@ -51,7 +51,6 @@
     <Button
         android:id="@+id/button_signup"
         android:textColor="@color/colorPrimary"
-        android:onClick="signUpToRest"
         android:text="@string/signup_label"
         android:background="@drawable/drawable_white_background"
         android:layout_above="@+id/button_login"

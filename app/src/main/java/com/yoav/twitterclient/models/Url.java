@@ -9,10 +9,10 @@ import java.util.List;
 @Parcel
 public class Url {
 
-    private String url;
-    private String expanded_url;
-    private String display_url;
-    private List<Integer> indices = new ArrayList<>();
+    String url;
+    String expanded_url;
+    String display_url;
+    List<Integer> indices = new ArrayList<>();
 
     /**
      * No args constructor for use in serialization

@@ -12,9 +12,6 @@ import java.util.List;
 @Parcel
 public class Entities {
 
-//    private List<Object> hashtags = new ArrayList<>();
-//    private List<Object> symbols = new ArrayList<>();
-//    private List<Object> user_mentions = new ArrayList<>();
     private List<Url> urls = new ArrayList<>();
     private List<Medium> media = new ArrayList<>();
 
@@ -25,33 +22,11 @@ public class Entities {
     public Entities() {
     }
 
-    /**
-     *
-     * @param symbols
-     * @param urls
-     * @param hashtags
-     * @param media
-     * @param userMentions
-     */
-    public Entities(List<Object> hashtags, List<Object> symbols, List<Object> userMentions, List<Url> urls, List<Medium> media) {
-//        this.hashtags = hashtags;
-//        this.symbols = symbols;
-//        this.user_mentions = userMentions;
+
+    public Entities(List<Url> urls, List<Medium> media) {
         this.urls = urls;
         this.media = media;
     }
-
-//    public List<Object> getHashtags() {
-//        return hashtags;
-//    }
-//
-//    public List<Object> getSymbols() {
-//        return symbols;
-//    }
-//
-//    public List<Object> getUserMentions() {
-//        return user_mentions;
-//    }
 
     public List<Url> getUrls() {
         return urls;

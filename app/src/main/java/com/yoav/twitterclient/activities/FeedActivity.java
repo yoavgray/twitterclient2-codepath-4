@@ -1,8 +1,13 @@
 package com.yoav.twitterclient.activities;
 
 import android.app.FragmentManager;
+import android.content.Context;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +39,14 @@ import com.yoav.twitterclient.models.Tweet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +54,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -48,12 +62,19 @@ import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class FeedActivity extends AppCompatActivity implements ComposeTweetFragment.TweetComposedListener {
+    public final static String TWEETS_FILE_NAME = "tweetsFileName";
+
     @BindView(R.id.swipe_refresh_container) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.recycler_view_feed) RecyclerView feedRecyclerView;
     @BindView(R.id.fab_compose_tweet) FloatingActionButton composeFab;
     @BindView(R.id.relative_layout_loading_tweets) RelativeLayout loadingTweetsRelativeLayout;
     @BindView(R.id.image_view_user_profile_image) ImageView userProfileImage;
+
+    @BindString(R.string.load_tweets_error) String loadTweetsErrorString;
+    @BindString(R.string.retry) String retryString;
+    @BindString(R.string.cant_compose) String cantComposeString;
+
 
     List<Tweet> tweetsList = new ArrayList<>();
     TweetsAdapter tweetsAdapter;
@@ -67,12 +88,16 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
         ButterKnife.bind(this);
         client = TwitterApplication.getRestClient();
         setSupportActionBar(toolbar);
-        loadCurrentUserDetails();
 
         setFeedRecyclerView();
         setRecyclerViewsListeners();
         setupSwipeRefreshLayout();
-        loadTweets(1);
+        if (checkConnectivity()) {
+            loadCurrentUserDetails();
+            loadTweets(1);
+        } else {
+            loadTweetsFromFile();
+        }
     }
 
     private void loadCurrentUserDetails() {
@@ -92,9 +117,10 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 if (errorResponse != null) {
-                    Toast.makeText(getBaseContext(), "Failed: " + errorResponse.toString(), Toast.LENGTH_LONG).show();
+
                     Log.d("ON_FAILURE", errorResponse.toString());
                 }
+                checkConnectivity();
                 swipeRefreshLayout.setRefreshing(false);
                 loadingTweetsRelativeLayout.setVisibility(View.GONE);
             }
@@ -123,8 +149,10 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
         feedRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                loadingTweetsRelativeLayout.setVisibility(View.VISIBLE);
-                loadTweets(page + 1);
+                if (checkConnectivity()) {
+                    loadingTweetsRelativeLayout.setVisibility(View.VISIBLE);
+                    loadTweets(page + 1);
+                }
             }
         });
     }
@@ -137,7 +165,10 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        loadTweets(1);
+                        if (checkConnectivity()) {
+                            loadCurrentUserDetails();
+                            loadTweets(1);
+                        }
                     }
                 });
         // Configure the refreshing colors
@@ -149,6 +180,10 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
 
     @OnClick(R.id.fab_compose_tweet)
     public void launchComposeTweetDialog() {
+        if (!checkConnectivity()) {
+            Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
+            return;
+        }
         FragmentManager fm = getFragmentManager();
         ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance();
         composeTweetFragment.show(fm, "fragment_filter");
@@ -159,28 +194,33 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
 //        client.postTweet(tweet, new JsonHttpResponseHandler() {
 //            @Override
 //            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-//                loadTweets(1);
+//              addNewTweetToList(tweet);
 //            }
 //
 //            @Override
 //            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
 //                super.onFailure(statusCode, headers, throwable, errorResponse);
-//                Toast.makeText(getBaseContext(), "Failed: " + errorResponse.toString(), Toast.LENGTH_LONG).show();
-//                Log.d("ON_FAILURE", errorResponse.toString());
+//                if (errorResponse != null) {
+//                    Log.d("ON_FAILURE", errorResponse.toString());
+//                    checkConnectivity();
+//                }
 //            }
 //        });
+        addNewTweetToList(tweet);
+    }
+
+    private void addNewTweetToList(String tweet) {
         Tweet newTweet = new Tweet();
         Calendar c = Calendar.getInstance();
-        System.out.println("Current time => "+c.getTime());
-
         SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
         String formattedDate = df.format(c.getTime());
         newTweet.setCreatedAt(formattedDate);
         newTweet.setText(tweet);
-        newTweet.setUser(new User(currentUser));
+        newTweet.setUser(new User(currentUser == null ? new CurrentUser() : currentUser));
         newTweet.setEntities(new Entities());
         newTweet.setExtendedEntities(new ExtendedEntities());
         tweetsList.add(0,newTweet);
+        persistToFile(true, tweetsList);
         tweetsAdapter.notifyItemInserted(0);
         feedRecyclerView.smoothScrollToPosition(0);
     }
@@ -191,8 +231,15 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Gson gson = new GsonBuilder().create();
                 Tweet[] tweets = gson.fromJson(response.toString(), Tweet[].class);
-                if (page == 1) tweetsList.clear();
-                tweetsList.addAll(Arrays.asList(tweets));
+                if (page == 1) {
+                    tweetsList.clear();
+                    tweetsList.addAll(Arrays.asList(tweets));
+                    persistToFile(true, tweetsList);
+                } else {
+                    // If page > 1 we want to persist only the new list
+                    tweetsList.addAll(Arrays.asList(tweets));
+                    persistToFile(false, Arrays.asList(tweets));
+                }
                 tweetsAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
                 loadingTweetsRelativeLayout.setVisibility(View.GONE);
@@ -209,5 +256,94 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
                 loadingTweetsRelativeLayout.setVisibility(View.GONE);
             }
         });
+    }
+
+    public void persistToFile(final boolean isNew, final List<Tweet> newTweets) {
+        // Persist to file another thread to not clog the main thread
+        Thread otherThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FileOutputStream outputStream;
+                try {
+                    if (isNew) {
+                        clearTweetsFile();
+                    }
+                    outputStream = openFileOutput(TWEETS_FILE_NAME, Context.MODE_PRIVATE);
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+                    for (int i = 0; i < newTweets.size(); i++) {
+                        writer.write(newTweets.get(i).toJsonString() + '\n');
+                    }
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        otherThread.run();
+    }
+
+    public void loadTweetsFromFile() {
+        BufferedReader input;
+        Gson gson = new GsonBuilder().create();
+        try {
+            input = new BufferedReader(
+                    new InputStreamReader(openFileInput(TWEETS_FILE_NAME)));
+            String line;
+            while ((line = input.readLine()) != null) {
+                Tweet currentTweet = gson.fromJson(line, Tweet.class);
+                tweetsList.add(currentTweet);
+            }
+            tweetsAdapter.notifyDataSetChanged();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void clearTweetsFile() {
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(TWEETS_FILE_NAME);
+            writer.print("");
+            writer.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method checks connectivity and renders a Snackbar if there's a problem
+     */
+    private boolean checkConnectivity() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        boolean isConnected = (activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting());
+        if (!isConnected || !isOnline()) {
+            Snackbar
+                .make(feedRecyclerView,
+                        loadTweetsErrorString,
+                        Snackbar.LENGTH_INDEFINITE)
+                .setAction(retryString, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        loadTweets(1);
+                    }
+                })
+                .setActionTextColor(Color.RED).show();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (IOException | InterruptedException e)
+        { e.printStackTrace(); }
+        return false;
     }
 }

@@ -1,9 +1,12 @@
 package com.yoav.twitterclient.models;
 
+import com.google.gson.Gson;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import org.parceler.Parcel;
 
 @Parcel
-public class User {
+public class User extends BaseModel {
 
     private String name;
     private String profile_background_tile;
@@ -73,6 +76,10 @@ public class User {
 
     public void setScreenName(String screen_name) {
         this.screen_name = screen_name;
+    }
+
+    public String toJsonString() {
+        return new Gson().toJson(this);
     }
 }
 

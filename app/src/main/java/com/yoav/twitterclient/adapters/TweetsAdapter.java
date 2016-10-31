@@ -112,6 +112,7 @@ public class TweetsAdapter extends
                 tweetBody = tweetBody.replace(url,urls.get(i).getExpandedUrl());
             }
         }
+        holder.getEmbeddedImageView().setVisibility(View.GONE);
         ExtendedEntities extendedEntities = tweet.getExtendedEntities();
         for (int i = 0; extendedEntities != null && i < extendedEntities.getMedia().size(); i++) {
             Medium thisMedia = extendedEntities.getMedia().get(i);

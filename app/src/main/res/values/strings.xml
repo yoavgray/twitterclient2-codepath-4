@@ -12,5 +12,8 @@
     <string name="tweet_label">Tweet</string>
     <string name="loading_tweets">Loading tweets!</string>
     <string name="no_more_tweet">No more Tweet for you!!</string>
+    <string name="load_tweets_error">Could not load Tweets. Please check your internet connection</string>
+    <string name="retry">Retry</string>
+    <string name="cant_compose">Can\'t send a Tweet when you\'re offline!</string>
 
 </resources>
