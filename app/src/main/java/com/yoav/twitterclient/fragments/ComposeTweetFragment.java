@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.yoav.twitterclient.R;
 
+import org.parceler.Parcels;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -25,6 +27,7 @@ import butterknife.OnClick;
 public class ComposeTweetFragment extends DialogFragment {
     public static final String PREFS_NAME = "PrefsFile";
     private static final String DRAFT_KEY = "draft";
+    private static final String SCREEN_NAME_KEY = "screenName";
     private static final int TWEET_CHAR_SIZE = 140;
     SharedPreferences sharedPreferences;
 
@@ -33,6 +36,7 @@ public class ComposeTweetFragment extends DialogFragment {
     @BindView(R.id.text_view_character_counter) TextView counterTextView;
 
     String draft = "";
+    String screenName = "";
 
     private TweetComposedListener selectionListener;
 
@@ -40,13 +44,11 @@ public class ComposeTweetFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-    public static ComposeTweetFragment newInstance() {
+    public static ComposeTweetFragment newInstance(String screenName) {
         ComposeTweetFragment fragment = new ComposeTweetFragment();
-//        Bundle args = new Bundle();
-//        args.putString(BEGIN_DATE, beginDate);
-//        args.putString(END_DATE, endDate);
-//        args.putInt(SORT_ID, sortId);
-//        fragment.setArguments(args);
+        Bundle args = new Bundle();
+        args.putString(SCREEN_NAME_KEY, screenName);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -57,8 +59,18 @@ public class ComposeTweetFragment extends DialogFragment {
         if (savedInstanceState != null) {
             draft = savedInstanceState.getString(DRAFT_KEY);
         } else {
-            draft = sharedPreferences.getString(DRAFT_KEY, "");
+            screenName = getArguments().getString(SCREEN_NAME_KEY);
+            if (screenName.equals("")) {
+                draft = sharedPreferences.getString(DRAFT_KEY, "");
+            } else {
+                draft = "";
+            }
+            draft = (!screenName.equals("") ? "@" : "")
+                    + screenName
+                    + (!screenName.equals("") ? " " : "")
+                    + draft;
         }
+
     }
 
     @Override
@@ -70,7 +82,7 @@ public class ComposeTweetFragment extends DialogFragment {
     @OnClick(R.id.button_send_tweet)
     public void sendTweet() {
         if (selectionListener != null) {
-            selectionListener.onTweetComposed(tweetEditText.getText().toString());
+            selectionListener.onTweetComposed(screenName, tweetEditText.getText().toString());
             tweetEditText.setText("");
         }
         dismiss();
@@ -133,7 +145,7 @@ public class ComposeTweetFragment extends DialogFragment {
     }
 
     public interface TweetComposedListener {
-        void onTweetComposed(String tweet);
+        void onTweetComposed(String screenName, String tweet);
     }
 
 

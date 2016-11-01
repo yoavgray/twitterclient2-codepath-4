@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.fragments.ComposeTweetFragment;
+import com.yoav.twitterclient.fragments.TweetDetailsFragment;
 import com.yoav.twitterclient.models.CurrentUser;
 import com.yoav.twitterclient.models.Entities;
 import com.yoav.twitterclient.models.ExtendedEntities;
@@ -38,6 +39,7 @@ import com.yoav.twitterclient.models.Tweet;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -122,7 +124,6 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
                 }
                 checkConnectivity();
                 swipeRefreshLayout.setRefreshing(false);
-                loadingTweetsRelativeLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -132,7 +133,9 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
         ItemClickSupport.addTo(feedRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                 @Override
                 public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                    Toast.makeText(getBaseContext(), "Tweet clicked!", Toast.LENGTH_SHORT).show();
+                    FragmentManager fm = getFragmentManager();
+                    TweetDetailsFragment tweetDetailsFragment = TweetDetailsFragment.newInstance(tweetsList.get(position));
+                    tweetDetailsFragment.show(fm, "fragment_details");
                 }
             }
         );
@@ -185,27 +188,27 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
             return;
         }
         FragmentManager fm = getFragmentManager();
-        ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance();
-        composeTweetFragment.show(fm, "fragment_filter");
+        ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance("");
+        composeTweetFragment.show(fm, "fragment_compose");
     }
 
     @Override
-    public void onTweetComposed(String tweet) {
-//        client.postTweet(tweet, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-//              addNewTweetToList(tweet);
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                super.onFailure(statusCode, headers, throwable, errorResponse);
-//                if (errorResponse != null) {
-//                    Log.d("ON_FAILURE", errorResponse.toString());
-//                    checkConnectivity();
-//                }
-//            }
-//        });
+    public void onTweetComposed(String screenName, final String tweet) {
+        client.postTweet(tweet, "@" + screenName, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                    checkConnectivity();
+                }
+            }
+        });
         addNewTweetToList(tweet);
     }
 
@@ -231,16 +234,20 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Gson gson = new GsonBuilder().create();
                 Tweet[] tweets = gson.fromJson(response.toString(), Tweet[].class);
+
                 if (page == 1) {
                     tweetsList.clear();
                     tweetsList.addAll(Arrays.asList(tweets));
+                    tweetsAdapter.notifyDataSetChanged();
                     persistToFile(true, tweetsList);
                 } else {
                     // If page > 1 we want to persist only the new list
+                    int listSize = tweetsList.size();
                     tweetsList.addAll(Arrays.asList(tweets));
+                    tweetsAdapter.notifyItemRangeInserted(listSize,20);
                     persistToFile(false, Arrays.asList(tweets));
                 }
-                tweetsAdapter.notifyDataSetChanged();
+
                 swipeRefreshLayout.setRefreshing(false);
                 loadingTweetsRelativeLayout.setVisibility(View.GONE);
             }
@@ -328,6 +335,7 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
                     @Override
                     public void onClick(View v) {
                         loadTweets(1);
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 })
                 .setActionTextColor(Color.RED).show();
