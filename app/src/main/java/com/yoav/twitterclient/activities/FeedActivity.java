@@ -209,8 +209,18 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 if (errorResponse != null) {
                     Log.d("ON_FAILURE", errorResponse.toString());
-                    checkConnectivity();
                 }
+                for (int i = 0; i < tweetsList.size(); i++) {
+                    Tweet thisTweet = tweetsList.get(i);
+                    if (thisTweet.getText().equals(tweet)) {
+                        tweetsList.remove(i);
+                        tweetsAdapter.notifyItemRemoved(i);
+                        persistToFile(true, tweetsList);
+                    }
+                }
+
+                checkConnectivity();
+                Toast.makeText(getBaseContext(), "Tweet posting failed!", Toast.LENGTH_SHORT).show();
             }
         });
         addNewTweetToList(tweet);
