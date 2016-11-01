@@ -47,22 +47,28 @@ The following **bonus** features are implemented:
 The following **additional** features are implemented:
 
 * [x] leverage the CoordinatorLayout to hide and show the FloatingActionButton and Toolbar when scrolling
+* [x] User can respond to tweets and see favorites and retweets of every tweet in the list!
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/dbwbFxn.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+This time the biggest challenge was time. I found myself mostly trying to do extras before I did the basics
+ans that took a lot of time and efforts. I hope to finish everything for next week!
+Also, trying to implement Videos in the recycler view was a mess.
 
 ## Open-source libraries used
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
 - [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android
-
-## License
+- [Parceler](https://github.com/johncarl81/parceler) - Android Parcelables made easy through code generation
+- [Glide](http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en) - Image loading and caching library for Android
+- [ButterKnife](http://jakewharton.github.io/butterknife/) - View Binding for android
+- [Gson](https://github.com/google/gson) - Java library that can be used to convert Java Objects into their JSON representation
+- [Wasabeef](https://github.com/wasabeef/glide-transformations) - Tweak images downloaded from Glide!
