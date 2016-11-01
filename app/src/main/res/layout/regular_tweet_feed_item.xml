@@ -58,7 +58,7 @@
         tools:text="\@yoavibavi"
         />
 
-    <TextView
+    <com.yoav.twitterclient.views.LinkifiedTextView
         android:id="@+id/text_view_tweet_body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
