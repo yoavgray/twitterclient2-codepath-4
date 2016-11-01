@@ -194,10 +194,14 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
 
     @Override
     public void onTweetComposed(String screenName, final String tweet) {
+        if (!checkConnectivity()) {
+            Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
+            return;
+        }
         client.postTweet(tweet, "@" + screenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-
+                Log.d("POST_TWEET","Success!");
             }
 
             @Override

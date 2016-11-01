@@ -1,14 +1,19 @@
 package com.yoav.twitterclient.adapters;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.yoav.twitterclient.R;
+import com.yoav.twitterclient.activities.FeedActivity;
+import com.yoav.twitterclient.fragments.ComposeTweetFragment;
 import com.yoav.twitterclient.models.ExtendedEntities;
 import com.yoav.twitterclient.models.Medium;
 import com.yoav.twitterclient.models.Tweet;
@@ -91,7 +96,7 @@ public class TweetsAdapter extends
 
     }
 
-    private void displayTweetEssentials(TweetViewHolder holder, Tweet tweet) {
+    private void displayTweetEssentials(TweetViewHolder holder, final Tweet tweet) {
         final User user = tweet.getUser();
 
         Glide.with(getContext()).load(user.getProfileImageUrl())
@@ -127,6 +132,17 @@ public class TweetsAdapter extends
         }
 
         holder.getTweetBodyTextView().setText(tweetBody);
+        holder.getFavoritesCountTextView().setText(String.valueOf(tweet.getFavoriteCount()));
+        holder.getRetweetsCountTextView().setText(String.valueOf(tweet.getRetweetCount()));
+
+        holder.getRespondImageView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = ((Activity) context).getFragmentManager();
+                ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance(tweet.getUser().getNickname());
+                composeTweetFragment.show(fm, "fragment_compose");
+            }
+        });
     }
 
 

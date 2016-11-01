@@ -85,4 +85,64 @@
         android:clickable="false"
         />
 
+    <View android:layout_width="wrap_content"
+          android:layout_height="1dp"
+          android:layout_alignLeft="@id/text_view_tweet_body"
+          android:layout_alignParentRight="true"
+          android:layout_below="@id/image_view_tweet_embedded_image"
+          android:id="@+id/view_vertical_separator"
+          android:layout_marginTop="10dp"
+          android:layout_marginBottom="10dp"
+          android:background="@android:color/black"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/view_vertical_separator"
+        android:layout_alignLeft="@id/text_view_tweet_body"
+        android:layout_marginTop="10dp"
+        >
+
+        <ImageView
+            android:id="@+id/respond_button"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/respond"
+            />
+
+        <ImageView
+            android:id="@+id/retweet_icon"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/retweet"
+            android:layout_marginLeft="30dp"
+            />
+
+        <TextView
+            android:id="@+id/textview_retweets_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            tools:text="2,231"
+            />
+
+        <ImageView
+            android:id="@+id/favorites_icon"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/heart"
+            android:layout_marginLeft="30dp"
+            />
+
+        <TextView
+            android:id="@+id/textview_favorites_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            tools:text="2,231"
+            />
+
+    </LinearLayout>
+
 </RelativeLayout>

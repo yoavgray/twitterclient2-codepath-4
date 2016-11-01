@@ -15,7 +15,10 @@ public class TweetViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.text_view_user_name) TextView userNameTextView;
     @BindView(R.id.text_view_user_nickname) TextView userNicknameTextView;
     @BindView(R.id.text_view_when_published) TextView whenPublishedTextView;
+    @BindView(R.id.textview_retweets_count) TextView retweetsCountTextView;
+    @BindView(R.id.textview_favorites_count) TextView favoritesCountTextView;
     @BindView(R.id.text_view_tweet_body) TextView tweetBodyTextView;
+    @BindView(R.id.respond_button) ImageView respondImageView;
     @BindView(R.id.image_view_tweet_embedded_image) ImageView embeddedImageView;
 
     // We also create a constructor that accepts the entire item row
@@ -47,5 +50,17 @@ public class TweetViewHolder extends RecyclerView.ViewHolder{
 
     public ImageView getEmbeddedImageView() {
         return embeddedImageView;
+    }
+
+    public TextView getRetweetsCountTextView() {
+        return retweetsCountTextView;
+    }
+
+    public TextView getFavoritesCountTextView() {
+        return favoritesCountTextView;
+    }
+
+    public ImageView getRespondImageView() {
+        return respondImageView;
     }
 }

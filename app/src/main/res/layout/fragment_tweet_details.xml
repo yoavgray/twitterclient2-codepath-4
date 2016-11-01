@@ -1,146 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_marginTop="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:padding="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-    >
-
-    <ImageView
-        android:id="@+id/image_view_profile_photo"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        />
-
-    <TextView
-        android:id="@+id/text_view_user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/image_view_profile_photo"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="0dp"
-        android:maxLines="1"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_alignTop="@id/image_view_profile_photo"
-        tools:text="Yoav Gray"
-        />
-
-    <TextView
-        android:id="@+id/text_view_when_published"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="4dp"
-        android:textSize="14sp"
-        android:layout_alignTop="@id/image_view_profile_photo"
-        tools:text="19h"
-        />
-
-    <TextView
-        android:id="@+id/text_view_user_nickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/text_view_user_name"
-        android:layout_marginLeft="8dp"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="14sp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:layout_alignTop="@id/image_view_profile_photo"
-        android:layout_toLeftOf="@id/text_view_when_published"
-        tools:text="\@yoavibavi"
-        />
-
-    <TextView
-        android:id="@+id/text_view_tweet_body"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/text_view_user_name"
-        android:layout_alignLeft="@id/text_view_user_name"
-        android:layout_marginTop="4dp"
-        android:textColor="@android:color/black"
-        android:fontFamily="monospace"
-        android:autoLink="all"
-        android:textStyle="bold"
-        android:textSize="14sp"
-
-        tools:text="look what I got to say!!!"
-        />
-
-    <ImageView
-        android:id="@+id/image_view_tweet_embedded_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/text_view_tweet_body"
-        android:layout_alignLeft="@id/text_view_tweet_body"
-        android:visibility="gone"
-        />
-
-    <View android:layout_width="wrap_content"
-          android:layout_height="1dp"
-          android:layout_alignLeft="@id/text_view_tweet_body"
-          android:layout_alignParentRight="true"
-          android:layout_below="@id/image_view_tweet_embedded_image"
-          android:id="@+id/view_vertical_separator"
-          android:layout_marginTop="10dp"
-          android:layout_marginBottom="10dp"
-          android:background="@android:color/black"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/view_vertical_separator"
-        android:layout_alignLeft="@id/text_view_tweet_body"
-        android:layout_marginTop="10dp"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:paddingBottom="30dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
+    <RelativeLayout
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:padding="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
         >
 
         <ImageView
-            android:id="@+id/respond_button"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:src="@drawable/respond"
-            />
-
-        <ImageView
-            android:id="@+id/retweet_icon"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:src="@drawable/retweet"
-            android:layout_marginLeft="30dp"
+            android:id="@+id/image_view_profile_photo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             />
 
         <TextView
-            android:id="@+id/textview_retweets_count"
+            android:id="@+id/text_view_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            tools:text="2,231"
-            />
-
-        <ImageView
-            android:id="@+id/favorites_icon"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:src="@drawable/heart"
-            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@id/image_view_profile_photo"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="0dp"
+            android:maxLines="1"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_alignTop="@id/image_view_profile_photo"
+            tools:text="Yoav Gray"
             />
 
         <TextView
-            android:id="@+id/textview_favorites_count"
+            android:id="@+id/text_view_when_published"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            tools:text="2,231"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="4dp"
+            android:textSize="14sp"
+            android:layout_alignTop="@id/image_view_profile_photo"
+            tools:text="19h"
             />
 
+        <TextView
+            android:id="@+id/text_view_user_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/text_view_user_name"
+            android:layout_marginLeft="8dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_alignTop="@id/image_view_profile_photo"
+            android:layout_toLeftOf="@id/text_view_when_published"
+            tools:text="\@yoavibavi"
+            />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/text_view_tweet_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_view_user_name"
+            android:layout_alignLeft="@id/text_view_user_name"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/black"
+            android:fontFamily="monospace"
+            android:autoLink="all"
+            android:textStyle="bold"
+            android:textSize="14sp"
 
-</RelativeLayout>
+            tools:text="look what I got to say!!!"
+            />
+
+        <ImageView
+            android:id="@+id/image_view_tweet_embedded_image"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/text_view_tweet_body"
+            android:layout_alignLeft="@id/text_view_tweet_body"
+            android:visibility="gone"
+            />
+
+        <View android:layout_width="wrap_content"
+              android:layout_height="1dp"
+              android:layout_alignLeft="@id/text_view_tweet_body"
+              android:layout_alignParentRight="true"
+              android:layout_below="@id/image_view_tweet_embedded_image"
+              android:id="@+id/view_vertical_separator"
+              android:layout_marginTop="10dp"
+              android:layout_marginBottom="10dp"
+              android:background="@android:color/black"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/view_vertical_separator"
+            android:layout_alignLeft="@id/text_view_tweet_body"
+            android:layout_marginTop="10dp"
+            >
+
+            <ImageView
+                android:id="@+id/respond_button"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/respond"
+                />
+
+            <ImageView
+                android:id="@+id/retweet_icon"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/retweet"
+                android:layout_marginLeft="30dp"
+                />
+
+            <TextView
+                android:id="@+id/textview_retweets_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                tools:text="2,231"
+                />
+
+            <ImageView
+                android:id="@+id/favorites_icon"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/heart"
+                android:layout_marginLeft="30dp"
+                />
+
+            <TextView
+                android:id="@+id/textview_favorites_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                tools:text="2,231"
+                />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</ScrollView>
