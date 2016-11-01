@@ -32,6 +32,14 @@ public class Tweet {
         return retweet_count;
     }
 
+    public void setFavoriteCount(Integer favorite_count) {
+        this.favorite_count = favorite_count;
+    }
+
+    public void setRetweetCount(Integer retweet_count) {
+        this.retweet_count = retweet_count;
+    }
+
     public String getInReplyToScreenName() {
         return in_reply_to_screen_name;
     }

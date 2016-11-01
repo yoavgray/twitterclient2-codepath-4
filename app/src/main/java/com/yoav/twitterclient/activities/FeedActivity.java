@@ -226,6 +226,8 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
         newTweet.setUser(new User(currentUser == null ? new CurrentUser() : currentUser));
         newTweet.setEntities(new Entities());
         newTweet.setExtendedEntities(new ExtendedEntities());
+        newTweet.setFavoriteCount(0);
+        newTweet.setRetweetCount(0);
         tweetsList.add(0,newTweet);
         persistToFile(true, tweetsList);
         tweetsAdapter.notifyItemInserted(0);
@@ -260,7 +262,6 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 if (errorResponse != null) {
-                    Toast.makeText(getBaseContext(), "Failed: " + errorResponse.toString(), Toast.LENGTH_LONG).show();
                     Log.d("ON_FAILURE", errorResponse.toString());
                 }
                 swipeRefreshLayout.setRefreshing(false);
