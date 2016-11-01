@@ -1,14 +1,19 @@
 package com.yoav.twitterclient.adapters;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.yoav.twitterclient.R;
+import com.yoav.twitterclient.activities.FeedActivity;
+import com.yoav.twitterclient.fragments.ComposeTweetFragment;
 import com.yoav.twitterclient.models.ExtendedEntities;
 import com.yoav.twitterclient.models.Medium;
 import com.yoav.twitterclient.models.Tweet;
@@ -91,7 +96,7 @@ public class TweetsAdapter extends
 
     }
 
-    private void displayTweetEssentials(TweetViewHolder holder, Tweet tweet) {
+    private void displayTweetEssentials(TweetViewHolder holder, final Tweet tweet) {
         final User user = tweet.getUser();
 
         Glide.with(getContext()).load(user.getProfileImageUrl())
@@ -101,7 +106,7 @@ public class TweetsAdapter extends
         holder.getUserNameTextView().setText(user.getName());
         String nickname = "@" + user.getNickname();
         holder.getUserNicknameTextView().setText(nickname);
-        holder.getWhenPublishedTextView().setText(getRelativeTimeAgo(tweet.getCreatedAt()));
+        holder.getWhenPublishedTextView().setText(tweet.getRelativeTimeAgo(tweet.getCreatedAt()));
         String tweetBody = tweet.getText();
 
         //Try removing a Twitter URL if present, though this may be null even if there's a URL
@@ -127,35 +132,18 @@ public class TweetsAdapter extends
         }
 
         holder.getTweetBodyTextView().setText(tweetBody);
+        holder.getFavoritesCountTextView().setText(String.valueOf(tweet.getFavoriteCount()));
+        holder.getRetweetsCountTextView().setText(String.valueOf(tweet.getRetweetCount()));
+
+        holder.getRespondImageView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = ((Activity) context).getFragmentManager();
+                ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance(tweet.getUser().getNickname());
+                composeTweetFragment.show(fm, "fragment_compose");
+            }
+        });
     }
 
-    public String getRelativeTimeAgo(String rawJsonDate) {
-        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
-        sf.setLenient(true);
 
-        String relativeDate = "";
-        try {
-            long dateMillis = sf.parse(rawJsonDate).getTime();
-            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        // Making the string look like "1h", "1m", etc.
-        String[] relativeDateSplitted = relativeDate.split(" ");
-        if (relativeDateSplitted[1].contains("second")) {
-            return (relativeDateSplitted[0] + "s");
-        } else if (relativeDateSplitted[1].contains("minute")) {
-            return relativeDateSplitted[0] + "m";
-        } else if (relativeDateSplitted[1].contains("hour")) {
-            return relativeDateSplitted[0] + "h";
-        } else if (relativeDateSplitted[1].contains("day")) {
-            return relativeDateSplitted[0] + "d";
-        } else if (relativeDateSplitted[1].contains("month")) {
-            return relativeDateSplitted[0] + "M";
-        } else {
-            return relativeDateSplitted[0] + "y";
-        }
-    }
 }
