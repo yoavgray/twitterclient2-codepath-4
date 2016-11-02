@@ -6,7 +6,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.parceler.Parcel;
 
 @Parcel
-public class User extends BaseModel {
+public class User {
 
     private String name;
     private String profile_background_tile;

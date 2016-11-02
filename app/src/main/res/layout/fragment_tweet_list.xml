@@ -1,0 +1,58 @@
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh_container"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_feed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"/>
+
+    <RelativeLayout
+        android:id="@+id/relative_layout_loading_tweets"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_anchor="@id/main_fragment_container"
+        app:layout_anchorGravity="bottom|right|end"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:background="@android:color/white"
+        >
+
+        <TextView
+            android:id="@+id/text_view_loading_more_tweets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loading_tweets"
+            android:textSize="20sp"
+            android:fontFamily="Arial"
+            android:textStyle="italic"
+            android:background="@android:color/white"
+            android:textColor="@color/colorAccent"
+            android:gravity="center_vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_loading_tweets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_toRightOf="@id/text_view_loading_more_tweets"
+            android:layout_alignTop="@id/text_view_loading_more_tweets"
+            android:layout_alignParentBottom="true"
+            tools:visibility="visible"
+            />
+
+    </RelativeLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -16,4 +16,7 @@
     <string name="retry">Retry</string>
     <string name="cant_compose">Can\'t send a Tweet when you\'re offline!</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

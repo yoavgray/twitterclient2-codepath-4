@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.fragments.ComposeTweetFragment;
 import com.yoav.twitterclient.fragments.TweetDetailsFragment;
+import com.yoav.twitterclient.fragments.TweetsListFragment;
 import com.yoav.twitterclient.models.CurrentUser;
 import com.yoav.twitterclient.models.Entities;
 import com.yoav.twitterclient.models.ExtendedEntities;
@@ -39,7 +41,6 @@ import com.yoav.twitterclient.models.Tweet;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.parceler.Parcels;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -88,6 +89,7 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
         ButterKnife.bind(this);
+
         client = TwitterApplication.getRestClient();
         setSupportActionBar(toolbar);
 
