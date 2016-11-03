@@ -1,12 +1,14 @@
 package com.yoav.twitterclient.models;
 
+import com.yoav.twitterclient.models.image_sizes.Sizes;
+
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Parcel
-public class Medium {
+public class Media {
 
     private Long id;
     private String id_str;
@@ -18,12 +20,13 @@ public class Medium {
     private String expanded_url;
     private String type;
     private VideoInfo video_info;
+    private Sizes sizes;
 
     /**
      * No args constructor for use in serialization
      *
      */
-    public Medium() {
+    public Media() {
     }
 
     public Long getId() {
@@ -65,4 +68,9 @@ public class Medium {
     public VideoInfo getVideoInfo() {
         return video_info;
     }
+
+    public Sizes getSizes() {
+        return sizes;
+    }
+
 }

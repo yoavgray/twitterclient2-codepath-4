@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.models.ExtendedEntities;
-import com.yoav.twitterclient.models.Medium;
+import com.yoav.twitterclient.models.Media;
 import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.models.Url;
 import com.yoav.twitterclient.models.User;
@@ -78,12 +78,12 @@ public class TweetDetailsFragment extends DialogFragment {
         // edit views
         final User user = tweet.getUser();
 
-        Glide.with(getActivity()).load(user.getProfileImageUrl())
+        Glide.with(getActivity()).load(user.getProfilePhotoUrl())
                 .bitmapTransform(new RoundedCornersTransformation(getActivity(), 10, 10))
                 .fitCenter()
                 .into(profileImageView);
         userNameTextView.setText(user.getName());
-        String nickname = "@" + user.getNickname();
+        String nickname = "@" + user.getScreenName();
         userNicknameTextView.setText(nickname);
         whenPublishedTextView.setText(tweet.getRelativeTimeAgo(tweet.getCreatedAt()));
         String tweetBody = tweet.getText();
@@ -98,7 +98,7 @@ public class TweetDetailsFragment extends DialogFragment {
         }
         ExtendedEntities extendedEntities = tweet.getExtendedEntities();
         for (int i = 0; extendedEntities != null && i < extendedEntities.getMedia().size(); i++) {
-            Medium thisMedia = extendedEntities.getMedia().get(i);
+            Media thisMedia = extendedEntities.getMedia().get(i);
             if (i == 0) {
                 String imageUrl = thisMedia.getMediaUrlHttps();
                 Glide.with(getActivity()).load(imageUrl).centerCrop()
@@ -117,7 +117,7 @@ public class TweetDetailsFragment extends DialogFragment {
     @OnClick(R.id.respond_button)
     public void respondToTweet() {
         FragmentManager fm = getFragmentManager();
-        ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance(tweet.getUser().getNickname());
+        ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance(tweet.getUser().getScreenName());
         composeTweetFragment.show(fm, "fragment_compose");
     }
 }

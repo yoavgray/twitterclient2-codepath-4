@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent"
+    tools:context="com.yoav.twitterclient.activities.ProfileActivity"
+    >
+
+    <ImageView
+        android:id="@+id/image_view_user_cover_photo"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/twitter_logo_white_on_blue"
+        />
+
+    <ImageView
+        android:id="@+id/image_view_user_profile_photo"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_below="@id/image_view_user_cover_photo"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="-36dp"
+        android:background="@drawable/drawable_transparent_background_white_border"
+        tools:src="@drawable/feather"
+        />
+
+    <TextView
+        android:id="@+id/text_view_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textColor="@android:color/white"
+        android:fontFamily="raleway"
+        android:layout_below="@id/image_view_user_profile_photo"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="12dp"
+        tools:text="Yoav Gray"
+        />
+
+    <TextView
+        android:id="@+id/text_view_user_screen_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#d7d7d7"
+        android:fontFamily="raleway"
+        android:layout_below="@id/text_view_user_name"
+        android:layout_alignLeft="@id/text_view_user_name"
+        android:layout_alignRight="@id/text_view_user_name"
+        android:gravity="center_horizontal"
+        tools:text="\@yoavgray"
+        />
+
+    <RelativeLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="12dp"
+        android:layout_alignTop="@+id/text_view_user_name"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/drawable_transparent_background_white_border"
+        >
+
+        <TextView
+            android:id="@+id/text_view_profile_followers_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold|italic"
+            android:fontFamily="raleway"
+            android:layout_marginRight="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/followers" />
+
+        <TextView
+            android:id="@+id/text_view_followers_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_view_profile_followers_label"
+            android:layout_alignLeft="@id/text_view_profile_followers_label"
+            android:layout_alignRight="@id/text_view_profile_followers_label"
+            android:layout_marginBottom="6dp"
+            tools:text="34"
+            android:gravity="center_horizontal"
+            />
+
+        <TextView
+            android:id="@+id/text_view_profile_following_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold|italic"
+            android:fontFamily="raleway"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@id/text_view_profile_followers_label"
+            android:layout_marginRight="8dp"
+            android:text="@string/following" />
+
+        <TextView
+            android:id="@+id/text_view_following_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_view_profile_following_label"
+            android:layout_alignLeft="@id/text_view_profile_following_label"
+            android:layout_alignRight="@id/text_view_profile_following_label"
+            tools:text="34"
+            android:gravity="center_horizontal"
+            />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/profile_vertical_separator"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_margin="8dp"
+        android:background="@android:color/white"
+        android:layout_below="@id/text_view_user_screen_name"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_profile_tweets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+</RelativeLayout>

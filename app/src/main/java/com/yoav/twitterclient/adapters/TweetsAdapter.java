@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide;
 import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.fragments.ComposeTweetFragment;
 import com.yoav.twitterclient.models.ExtendedEntities;
-import com.yoav.twitterclient.models.Medium;
+import com.yoav.twitterclient.models.Media;
 import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.models.Url;
 import com.yoav.twitterclient.models.User;
@@ -92,12 +92,12 @@ public class TweetsAdapter extends
     private void displayTweetEssentials(TweetViewHolder holder, final Tweet tweet) {
         final User user = tweet.getUser();
 
-        Glide.with(getContext()).load(user.getProfileImageUrl())
+        Glide.with(getContext()).load(user.getProfilePhotoUrl().replace("_normal", ""))
                 .bitmapTransform(new RoundedCornersTransformation(getContext(), 10, 10))
                 .fitCenter()
                 .into(holder.getProfileImageView());
         holder.getUserNameTextView().setText(user.getName());
-        String nickname = "@" + user.getNickname();
+        String nickname = "@" + user.getScreenName();
         holder.getUserNicknameTextView().setText(nickname);
         holder.getWhenPublishedTextView().setText(tweet.getRelativeTimeAgo(tweet.getCreatedAt()));
         String tweetBody = tweet.getText();
@@ -113,7 +113,7 @@ public class TweetsAdapter extends
         holder.getEmbeddedImageView().setVisibility(View.GONE);
         ExtendedEntities extendedEntities = tweet.getExtendedEntities();
         for (int i = 0; extendedEntities != null && i < extendedEntities.getMedia().size(); i++) {
-            Medium thisMedia = extendedEntities.getMedia().get(i);
+            Media thisMedia = extendedEntities.getMedia().get(i);
             if (i == 0) {
                 String imageUrl = thisMedia.getMediaUrlHttps();
                 Glide.with(getContext()).load(imageUrl).centerCrop()
@@ -132,7 +132,7 @@ public class TweetsAdapter extends
             @Override
             public void onClick(View v) {
                 FragmentManager fm = ((Activity) context).getFragmentManager();
-                ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance(tweet.getUser().getNickname());
+                ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance(tweet.getUser().getScreenName());
                 composeTweetFragment.show(fm, "fragment_compose");
             }
         });

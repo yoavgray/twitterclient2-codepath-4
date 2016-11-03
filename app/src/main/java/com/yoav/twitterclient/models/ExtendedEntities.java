@@ -8,14 +8,14 @@ import java.util.List;
 @Parcel
 public class ExtendedEntities {
 
-    private List<Medium> media = new ArrayList<Medium>();
+    private List<Media> media = new ArrayList<Media>();
 
     /**
      *
      * @return
      * The media
      */
-    public List<Medium> getMedia() {
+    public List<Media> getMedia() {
         return media;
     }
 }

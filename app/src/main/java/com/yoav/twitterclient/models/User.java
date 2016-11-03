@@ -47,7 +47,7 @@ public class User {
     public User(CurrentUser otherUser) {
         name = otherUser.getName();
         screen_name = otherUser.getScreenName();
-        profile_image_url = otherUser.getProfileImageUrl();
+        profile_image_url = otherUser.getProfileImageUrlHttps();
     }
 
     public String getName() {
@@ -58,25 +58,30 @@ public class User {
         return created_at;
     }
 
-    public String getNickname() {
+    public String getScreenName() {
         return screen_name;
     }
 
-    public String getProfileImageUrl() {
-        return profile_image_url;
+    public String getProfilePhotoUrl() {
+        return profile_image_url_https;
+    }
+
+    public String getCoverPhotoUrl() {
+        return profile_background_image_url_https;
+    }
+
+    public Integer getFollowingCount() {
+        return friends_count;
+    }
+
+    public Integer getFollowersCount() {
+        return followers_count;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setProfileImageUrl(String profile_image_url) {
-        this.profile_image_url = profile_image_url;
-    }
-
-    public void setScreenName(String screen_name) {
-        this.screen_name = screen_name;
-    }
 
     public String toJsonString() {
         return new Gson().toJson(this);

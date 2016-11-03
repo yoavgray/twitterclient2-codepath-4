@@ -1,9 +1,5 @@
 package com.yoav.twitterclient.models;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
@@ -13,7 +9,7 @@ import java.util.List;
 public class Entities {
 
     private List<Url> urls = new ArrayList<>();
-    private List<Medium> media = new ArrayList<>();
+    private List<Media> media = new ArrayList<>();
 
     /**
      * No args constructor for use in serialization
@@ -23,7 +19,7 @@ public class Entities {
     }
 
 
-    public Entities(List<Url> urls, List<Medium> media) {
+    public Entities(List<Url> urls, List<Media> media) {
         this.urls = urls;
         this.media = media;
     }
@@ -32,7 +28,7 @@ public class Entities {
         return urls;
     }
 
-    public List<Medium> getMedia() {
+    public List<Media> getMedia() {
         return media;
     }
 }

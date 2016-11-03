@@ -112,7 +112,7 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
                 currentUser = gson.fromJson(response.toString(), CurrentUser.class);
                 getSupportActionBar().setDisplayUseLogoEnabled(true);
                 toolbar.setTitle("@" + currentUser.getScreenName());
-                Glide.with(getBaseContext()).load(currentUser.getProfileImageUrl()).fitCenter()
+                Glide.with(getBaseContext()).load(currentUser.getProfileImageUrlHttps()).fitCenter()
                         .bitmapTransform(new RoundedCornersTransformation(getBaseContext(), 5, 5))
                         .into(userProfileImage);
             }
