@@ -9,8 +9,10 @@
 
     <style name="Theme.AppBaseTheme.Light.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">#ffffff</item>
-        <item name="colorPrimaryDark">#657786</item>
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/colorAccent</item>
+        <item name="android:colorForeground">#FFFFFF</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
     </style>
 </resources>

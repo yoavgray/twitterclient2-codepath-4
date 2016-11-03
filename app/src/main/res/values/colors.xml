@@ -2,5 +2,8 @@
 <resources>
     <color name="colorPrimary">#1DA1F2</color>
     <color name="colorAccent">#1DA1F2</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="windowBackground">#FFFFFF</color>
+    <color name="navigationBarColor">#B7B7B7</color>
 
 </resources>
