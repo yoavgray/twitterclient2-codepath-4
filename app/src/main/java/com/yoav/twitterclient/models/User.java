@@ -78,6 +78,10 @@ public class User {
         return followers_count;
     }
 
+    public String getIdStr() {
+        return id_str;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

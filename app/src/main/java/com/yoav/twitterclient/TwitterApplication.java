@@ -17,6 +17,7 @@ import android.content.Context;
  *
  */
 public class TwitterApplication extends Application {
+	public static final String USER_ID_KEY = "userId";
 	private static Context context;
 
 	@Override

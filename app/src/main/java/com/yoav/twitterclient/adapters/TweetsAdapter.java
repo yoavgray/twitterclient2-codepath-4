@@ -3,12 +3,15 @@ package com.yoav.twitterclient.adapters;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.yoav.twitterclient.R;
+import com.yoav.twitterclient.TwitterApplication;
+import com.yoav.twitterclient.activities.ProfileActivity;
 import com.yoav.twitterclient.fragments.ComposeTweetFragment;
 import com.yoav.twitterclient.models.ExtendedEntities;
 import com.yoav.twitterclient.models.Media;
@@ -96,6 +99,14 @@ public class TweetsAdapter extends
                 .bitmapTransform(new RoundedCornersTransformation(getContext(), 10, 10))
                 .fitCenter()
                 .into(holder.getProfileImageView());
+        holder.getProfileImageView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+                intent.putExtra(TwitterApplication.USER_ID_KEY, user.getIdStr());
+                getContext().startActivity(intent);
+            }
+        });
         holder.getUserNameTextView().setText(user.getName());
         String nickname = "@" + user.getScreenName();
         holder.getUserNicknameTextView().setText(nickname);

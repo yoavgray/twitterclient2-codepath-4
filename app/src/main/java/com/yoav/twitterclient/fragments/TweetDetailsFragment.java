@@ -78,7 +78,7 @@ public class TweetDetailsFragment extends DialogFragment {
         // edit views
         final User user = tweet.getUser();
 
-        Glide.with(getActivity()).load(user.getProfilePhotoUrl())
+        Glide.with(getActivity()).load(user.getProfilePhotoUrl().replace("_normal", ""))
                 .bitmapTransform(new RoundedCornersTransformation(getActivity(), 10, 10))
                 .fitCenter()
                 .into(profileImageView);

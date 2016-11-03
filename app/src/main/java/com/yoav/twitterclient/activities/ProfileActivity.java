@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.R;
+import com.yoav.twitterclient.TwitterApplication;
 import com.yoav.twitterclient.TwitterClient;
 import com.yoav.twitterclient.models.User;
 
@@ -49,7 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
             loadProfile();
             loadUserTweets();
         } else {
-            userId = getIntent().getStringExtra(USER_ID_KEY);
+            userId = getIntent().getStringExtra(TwitterApplication.USER_ID_KEY);
             loadUser(userId);
         }
     }
@@ -64,9 +65,9 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadProfile() {
-        Glide.with(this).load(user.getCoverPhotoUrl().replace("normal", "bigger")).centerCrop().into(userCoverPhoto);
-        Glide.with(this).load(user.getProfilePhotoUrl().replace("normal", "bigger")).centerCrop()
-                .bitmapTransform(new RoundedCornersTransformation(this, 5, 5))
+        Glide.with(this).load(user.getCoverPhotoUrl().replace("_normal", "")).centerCrop().into(userCoverPhoto);
+        Glide.with(this).load(user.getProfilePhotoUrl().replace("_normal", "")).centerCrop()
+                .bitmapTransform(new RoundedCornersTransformation(this, 3, 3))
                 .into(userProfilePhoto);
         userNameTextView.setText(user.getName());
         String screenName = "@" + user.getScreenName();
