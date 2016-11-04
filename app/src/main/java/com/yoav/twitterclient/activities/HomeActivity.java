@@ -64,15 +64,6 @@ public class HomeActivity extends AppCompatActivity implements TweetsListFragmen
         loadCurrentUserDetails();
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
-        Fragment activeFragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment_container);
-
-        if (activeFragment == null) {
-            activeFragment = TweetsListFragment.newInstance("", "");
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_fragment_container, activeFragment, activeFragment.getClass().getSimpleName())
-                    .commit();
-        }
 
         setSupportActionBar(toolbar);
 

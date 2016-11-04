@@ -36,13 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:background="@android:color/white" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/main_fragment_container"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_compose_tweet"
@@ -52,7 +47,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/feather"
         app:layout_behavior="com.yoav.twitterclient.utils.ScrollAwareFABBehavior"
-        app:layout_anchor="@id/main_fragment_container"
+        app:layout_anchor="@id/viewpager"
         app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>
