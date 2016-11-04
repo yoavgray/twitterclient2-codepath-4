@@ -10,12 +10,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:descendantFocusability="afterDescendants"
+                android:id="@+id/relative_layout_tweet_item"
     >
+
+    <TextView
+        android:id="@+id/text_view_retweeted_status_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginBottom="4dp"
+        android:drawableLeft="@drawable/small_retweet"
+        android:drawablePadding="2dp"
+        android:textColor="@color/colorAccent"
+        android:visibility="visible"
+        tools:visibility="visible"
+        tools:text="Yoav Gray Retweeted"
+        />
 
     <ImageView
         android:id="@+id/image_view_profile_photo"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_below="@id/text_view_retweeted_status_label"
         />
 
     <TextView
@@ -116,6 +133,7 @@
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:src="@drawable/retweet"
+            android:layout_marginTop="2dp"
             android:layout_marginLeft="30dp"
             />
 
@@ -132,6 +150,7 @@
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:src="@drawable/heart"
+            android:layout_marginTop="2dp"
             android:layout_marginLeft="30dp"
             />
 

@@ -3,6 +3,7 @@ package com.yoav.twitterclient.viewholders;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yoav.twitterclient.R;
@@ -11,7 +12,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TweetViewHolder extends RecyclerView.ViewHolder{
+    @BindView(R.id.text_view_retweeted_status_label) TextView retweetedTextView;
     @BindView(R.id.image_view_profile_photo) ImageView profileImageView;
+    @BindView(R.id.relative_layout_tweet_item) RelativeLayout tweetItemLayout;
     @BindView(R.id.text_view_user_name) TextView userNameTextView;
     @BindView(R.id.text_view_user_nickname) TextView userNicknameTextView;
     @BindView(R.id.text_view_when_published) TextView whenPublishedTextView;
@@ -26,6 +29,10 @@ public class TweetViewHolder extends RecyclerView.ViewHolder{
     public TweetViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+    }
+
+    public TextView getRetweetedTextView() {
+        return retweetedTextView;
     }
 
     public ImageView getProfileImageView() {
@@ -62,5 +69,9 @@ public class TweetViewHolder extends RecyclerView.ViewHolder{
 
     public ImageView getRespondImageView() {
         return respondImageView;
+    }
+
+    public RelativeLayout getTweetItemLayout() {
+        return tweetItemLayout;
     }
 }

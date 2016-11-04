@@ -6,6 +6,13 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.design.widget.Snackbar;
+import android.view.View;
+
+import java.io.IOException;
 
 /*
  * This is the Android application itself and is used to configure various settings

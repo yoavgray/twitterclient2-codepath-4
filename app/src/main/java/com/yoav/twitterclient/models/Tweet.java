@@ -21,6 +21,7 @@ public class Tweet {
     private Integer favorite_count;
     private Integer retweet_count;
     private String in_reply_to_screen_name;
+    private Tweet retweeted_status;
 
 	public Tweet() {}
 
@@ -66,6 +67,10 @@ public class Tweet {
 
     public ExtendedEntities getExtendedEntities() {
         return extended_entities;
+    }
+
+    public Tweet getRetweeted_status() {
+        return retweeted_status;
     }
 
     public void setName(String name) {

@@ -13,6 +13,7 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.yoav.twitterclient.TwitterApplication;
 import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.utils.EndlessRecyclerViewScrollListener;
 
@@ -32,16 +33,15 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class TweetsListFragment extends BaseTweetListFragment {
-    public final static String TWEETS_FILE_NAME = "tweetsFileName";
+public class MentionsListFragment extends BaseTweetListFragment {
+    public final static String MENTIONS_FILE_NAME = "mentionsFileName";
 
-    public TweetsListFragment() {
+    public MentionsListFragment() {
         // Required empty public constructor
     }
 
-
-    public static TweetsListFragment newInstance(String param1, String param2) {
-        TweetsListFragment fragment = new TweetsListFragment();
+    public static MentionsListFragment newInstance(String param1, String param2) {
+        MentionsListFragment fragment = new MentionsListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -52,6 +52,7 @@ public class TweetsListFragment extends BaseTweetListFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        client = TwitterApplication.getRestClient();
     }
 
     @Override
@@ -59,13 +60,14 @@ public class TweetsListFragment extends BaseTweetListFragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (checkConnectivity()) {
-            loadTweets(1);
+            loadMentions();
         } else {
             renderConnectionErrorSnackBar(feedRecyclerView);
-            loadTweetsFromFile();
+            loadMentionsFromFile();
         }
     }
 
+    @Override
     public void setFeedRecyclerView() {
         super.setFeedRecyclerView();
 
@@ -74,13 +76,14 @@ public class TweetsListFragment extends BaseTweetListFragment {
             public void onLoadMore(int page, int totalItemsCount) {
                 if (checkConnectivity()) {
                     loadingTweetsRelativeLayout.setVisibility(View.VISIBLE);
-                    loadTweets(page + 1);
+                    loadMentions();
                 } else {
                     renderConnectionErrorSnackBar(feedRecyclerView);
                 }
             }
         });
     }
+
 
     /**
      * This method sets the SwipeRefreshLayout on start
@@ -92,13 +95,13 @@ public class TweetsListFragment extends BaseTweetListFragment {
                     @Override
                     public void onRefresh() {
                         if (checkConnectivity()) {
-                            loadTweets(1);
+                            loadMentions();
                         } else {
                             renderConnectionErrorSnackBar(feedRecyclerView);
                         }
                     }
                 });
-        }
+    }
 
     public void persistToFile(final boolean isNew, final List<Tweet> newTweets) {
         // Persist to file another thread to not clog the main thread
@@ -110,7 +113,7 @@ public class TweetsListFragment extends BaseTweetListFragment {
                     if (isNew) {
                         clearTweetsFile();
                     }
-                    outputStream = getActivity().openFileOutput(TWEETS_FILE_NAME, Context.MODE_PRIVATE);
+                    outputStream = getContext().openFileOutput(MENTIONS_FILE_NAME, Context.MODE_PRIVATE);
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
                     for (int i = 0; i < newTweets.size(); i++) {
                         writer.write(newTweets.get(i).toJsonString() + '\n');
@@ -124,12 +127,12 @@ public class TweetsListFragment extends BaseTweetListFragment {
         otherThread.run();
     }
 
-    public void loadTweetsFromFile() {
+    public void loadMentionsFromFile() {
         BufferedReader input;
         Gson gson = new GsonBuilder().create();
         try {
             input = new BufferedReader(
-                    new InputStreamReader(getActivity().openFileInput(TWEETS_FILE_NAME)));
+                    new InputStreamReader(getContext().openFileInput(MENTIONS_FILE_NAME)));
             String line;
             while ((line = input.readLine()) != null) {
                 Tweet currentTweet = gson.fromJson(line, Tweet.class);
@@ -142,25 +145,17 @@ public class TweetsListFragment extends BaseTweetListFragment {
 
     }
 
-    public void loadTweets(final int page) {
-        client.getHomeTimeline(page, new JsonHttpResponseHandler() {
+    public void loadMentions() {
+        client.getMentionsTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Gson gson = new GsonBuilder().create();
                 Tweet[] tweets = gson.fromJson(response.toString(), Tweet[].class);
 
-                if (page == 1) {
-                    tweetsList.clear();
-                    tweetsList.addAll(Arrays.asList(tweets));
-                    tweetsAdapter.notifyDataSetChanged();
-                    persistToFile(true, tweetsList);
-                } else {
-                    // If page > 1 we want to persist only the new list
-                    int listSize = tweetsList.size();
-                    tweetsList.addAll(Arrays.asList(tweets));
-                    tweetsAdapter.notifyItemRangeInserted(listSize,20);
-                    persistToFile(false, Arrays.asList(tweets));
-                }
+                tweetsList.clear();
+                tweetsList.addAll(Arrays.asList(tweets));
+                tweetsAdapter.notifyDataSetChanged();
+                persistToFile(true, tweetsList);
 
                 swipeRefreshLayout.setRefreshing(false);
                 loadingTweetsRelativeLayout.setVisibility(View.GONE);
@@ -181,7 +176,7 @@ public class TweetsListFragment extends BaseTweetListFragment {
     public void clearTweetsFile() {
         PrintWriter writer;
         try {
-            writer = new PrintWriter(TWEETS_FILE_NAME);
+            writer = new PrintWriter(MENTIONS_FILE_NAME);
             writer.print("");
             writer.close();
         } catch (FileNotFoundException e) {
@@ -197,7 +192,7 @@ public class TweetsListFragment extends BaseTweetListFragment {
                 .setAction(retryString, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        loadTweets(1);
+                        loadMentions();
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 })

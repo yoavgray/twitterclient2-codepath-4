@@ -13,6 +13,7 @@ import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.TwitterApplication;
 import com.yoav.twitterclient.activities.ProfileActivity;
 import com.yoav.twitterclient.fragments.ComposeTweetFragment;
+import com.yoav.twitterclient.fragments.TweetDetailsFragment;
 import com.yoav.twitterclient.models.ExtendedEntities;
 import com.yoav.twitterclient.models.Media;
 import com.yoav.twitterclient.models.Tweet;
@@ -80,20 +81,31 @@ public class TweetsAdapter extends
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()) {
             case REGULAR:
-                TweetViewHolder imageViewHolder = (TweetViewHolder) viewHolder;
-                configureImageTweetViewHolder(imageViewHolder, position);
+                TweetViewHolder tweetViewHolder = (TweetViewHolder) viewHolder;
+                configureTweetViewHolder(tweetViewHolder, position);
                 break;
         }
     }
 
-    private void configureImageTweetViewHolder(TweetViewHolder holder, int position) {
-        final Tweet tweet = tweets.get(position);
+    private void configureTweetViewHolder(TweetViewHolder holder, int position) {
+        Tweet tweet = tweets.get(position);
         displayTweetEssentials(holder, tweet);
-
     }
 
-    private void displayTweetEssentials(TweetViewHolder holder, final Tweet tweet) {
-        final User user = tweet.getUser();
+    private void displayTweetEssentials(TweetViewHolder holder, Tweet tweet) {
+        String retweeter;
+        if (tweet.getRetweeted_status() != null) {
+            retweeter = tweet.getUser().getName();
+            tweet = tweet.getRetweeted_status();
+            holder.getRetweetedTextView().setVisibility(View.VISIBLE);
+            String toShow = retweeter + " Retweeted";
+            holder.getRetweetedTextView().setText(toShow);
+        } else {
+            holder.getRetweetedTextView().setVisibility(View.GONE);
+        }
+
+        final Tweet finalTweet = tweet;
+        final User user = finalTweet.getUser();
 
         Glide.with(getContext()).load(user.getProfilePhotoUrl().replace("_normal", ""))
                 .bitmapTransform(new RoundedCornersTransformation(getContext(), 10, 10))
@@ -110,11 +122,11 @@ public class TweetsAdapter extends
         holder.getUserNameTextView().setText(user.getName());
         String nickname = "@" + user.getScreenName();
         holder.getUserNicknameTextView().setText(nickname);
-        holder.getWhenPublishedTextView().setText(tweet.getRelativeTimeAgo(tweet.getCreatedAt()));
-        String tweetBody = tweet.getText();
+        holder.getWhenPublishedTextView().setText(finalTweet.getRelativeTimeAgo(finalTweet.getCreatedAt()));
+        String tweetBody = finalTweet.getText();
 
         //Try removing a Twitter URL if present, though this may be null even if there's a URL
-        List<Url> urls = tweet.getEntities().getUrls();
+        List<Url> urls = finalTweet.getEntities().getUrls();
         for (int i = 0; urls != null && i < urls.size(); i++) {
             String url = urls.get(i).getUrl();
             if (url.contains("/t.co") && tweetBody.contains(url)) {
@@ -122,7 +134,7 @@ public class TweetsAdapter extends
             }
         }
         holder.getEmbeddedImageView().setVisibility(View.GONE);
-        ExtendedEntities extendedEntities = tweet.getExtendedEntities();
+        ExtendedEntities extendedEntities = finalTweet.getExtendedEntities();
         for (int i = 0; extendedEntities != null && i < extendedEntities.getMedia().size(); i++) {
             Media thisMedia = extendedEntities.getMedia().get(i);
             if (i == 0) {
@@ -136,15 +148,23 @@ public class TweetsAdapter extends
         }
 
         holder.getTweetBodyTextView().setText(tweetBody);
-        holder.getFavoritesCountTextView().setText(String.valueOf(tweet.getFavoriteCount()));
-        holder.getRetweetsCountTextView().setText(String.valueOf(tweet.getRetweetCount()));
+        holder.getFavoritesCountTextView().setText(String.valueOf(finalTweet.getFavoriteCount()));
+        holder.getRetweetsCountTextView().setText(String.valueOf(finalTweet.getRetweetCount()));
 
         holder.getRespondImageView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fm = ((Activity) context).getFragmentManager();
-                ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance(tweet.getUser().getScreenName());
+                ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance(finalTweet.getUser().getScreenName());
                 composeTweetFragment.show(fm, "fragment_compose");
+            }
+        });
+        holder.getTweetItemLayout().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = ((Activity) context).getFragmentManager();
+                TweetDetailsFragment tweetDetailsFragment = TweetDetailsFragment.newInstance(finalTweet);
+                tweetDetailsFragment.show(fm, "fragment_details");
             }
         });
     }
