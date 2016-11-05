@@ -5,7 +5,7 @@
     android:id="@+id/activity_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
+    android:background="@android:color/white"
     tools:context="com.yoav.twitterclient.activities.ProfileActivity"
     >
 
@@ -24,7 +24,6 @@
         android:layout_below="@id/image_view_user_cover_photo"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="-36dp"
-        android:background="@drawable/drawable_transparent_background_white_border"
         tools:src="@drawable/feather"
         />
 
@@ -33,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="15sp"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorAccent"
         android:fontFamily="raleway"
         android:layout_below="@id/image_view_user_profile_photo"
         android:layout_marginTop="10dp"
@@ -60,11 +59,12 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_margin="8dp"
-        android:background="@android:color/white"
+        android:background="@color/colorAccent"
         android:layout_below="@id/text_view_user_screen_name"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_profile_tweets"
+        android:layout_below="@id/profile_vertical_separator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
@@ -72,7 +72,7 @@
     <RelativeLayout
         android:layout_width="174dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/drawable_transparent_background_white_border"
+        android:background="@drawable/drawable_transparent_blue_border_round_corners"
         android:layout_alignBaseline="@+id/text_view_user_name"
         android:layout_alignBottom="@+id/text_view_user_name"
         android:layout_alignRight="@+id/profile_vertical_separator"
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold|italic"
             android:fontFamily="raleway"
             android:layout_marginTop="2dp"
@@ -110,7 +110,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold|italic"
             android:fontFamily="raleway"
             android:layout_marginTop="2dp"
