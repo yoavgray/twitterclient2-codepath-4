@@ -4,14 +4,17 @@ import android.text.format.DateUtils;
 
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.StringUtils;
 import org.parceler.Parcel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 @Parcel
 public class Tweet {
+    private String id_str;
 	private String name;
 	private String created_at;
 	private String text;
@@ -73,6 +76,10 @@ public class Tweet {
         return retweeted_status;
     }
 
+    public String getIdStr() {
+        return id_str;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -115,7 +122,10 @@ public class Tweet {
             e.printStackTrace();
         }
         // Making the string look like "1h", "1m", etc.
+        if (relativeDate.equals("Yesterday")) return "1d";
+
         String[] relativeDateSplitted = relativeDate.split(" ");
+
         if (relativeDateSplitted[1].contains("second")) {
             return (relativeDateSplitted[0] + "s");
         } else if (relativeDateSplitted[1].contains("minute")) {
@@ -127,7 +137,7 @@ public class Tweet {
         } else if (relativeDateSplitted[1].contains("month")) {
             return relativeDateSplitted[0] + "M";
         } else {
-            return relativeDateSplitted[0] + "y";
+            return relativeDate;
         }
     }
 }

@@ -45,6 +45,7 @@ public abstract class BaseTweetListFragment extends Fragment {
     protected TwitterClient client;
     protected Unbinder unbinder;
     protected LinearLayoutManager linearLayoutManager;
+    protected String maxId = null;
 
     private OnFragmentInteractionListener mListener;
 
@@ -95,6 +96,15 @@ public abstract class BaseTweetListFragment extends Fragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
     }
+
+    public void addNewTweetToList(Tweet tweet) {
+        tweetsList.add(0, tweet);
+        tweetsAdapter.notifyItemInserted(0);
+        feedRecyclerView.smoothScrollToPosition(0);
+        reloadList();
+    }
+
+    public abstract void reloadList();
 
         // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

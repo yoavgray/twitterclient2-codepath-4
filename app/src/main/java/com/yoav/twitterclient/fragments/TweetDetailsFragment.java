@@ -118,7 +118,8 @@ public class TweetDetailsFragment extends DialogFragment {
     @OnClick(R.id.respond_button)
     public void respondToTweet() {
         FragmentManager fm = getFragmentManager();
-        ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance(tweet.getUser().getScreenName());
+        ComposeTweetFragment composeTweetFragment = ComposeTweetFragment
+                .newInstance(tweet.getUser().getScreenName(), tweet.getIdStr());
         composeTweetFragment.show(fm, "fragment_compose");
     }
 }

@@ -155,7 +155,8 @@ public class TweetsAdapter extends
             @Override
             public void onClick(View v) {
                 FragmentManager fm = ((Activity) context).getFragmentManager();
-                ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance(finalTweet.getUser().getScreenName());
+                ComposeTweetFragment composeTweetFragment = ComposeTweetFragment
+                        .newInstance(finalTweet.getUser().getScreenName(), finalTweet.getIdStr());
                 composeTweetFragment.show(fm, "fragment_compose");
             }
         });

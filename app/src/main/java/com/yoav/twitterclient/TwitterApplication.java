@@ -24,7 +24,11 @@ import java.io.IOException;
  *
  */
 public class TwitterApplication extends Application {
+	public static final String USER_KEY = "user";
 	public static final String USER_ID_KEY = "userId";
+	public static final String TIMELINE_KEY = "timeline";
+	public static final String FAVORITES_KEY = "favorites";
+
 	private static Context context;
 
 	@Override

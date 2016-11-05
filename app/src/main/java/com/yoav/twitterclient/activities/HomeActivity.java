@@ -1,8 +1,14 @@
 package com.yoav.twitterclient.activities;
+import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +30,7 @@ import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.TwitterApplication;
 import com.yoav.twitterclient.TwitterClient;
 import com.yoav.twitterclient.adapters.ViewPagerAdapter;
+import com.yoav.twitterclient.fragments.BaseTweetListFragment;
 import com.yoav.twitterclient.fragments.ComposeTweetFragment;
 import com.yoav.twitterclient.fragments.MentionsListFragment;
 import com.yoav.twitterclient.fragments.TweetsListFragment;
@@ -31,18 +38,21 @@ import com.yoav.twitterclient.models.CurrentUser;
 import com.yoav.twitterclient.models.Tweet;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 
 public class HomeActivity extends AppCompatActivity implements ComposeTweetFragment.TweetComposedListener{
     private static final String USER_ID_KEY = "userId";
+
+    @BindView(R.id.main_content) CoordinatorLayout mainCoordinatorLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.sliding_tabs) TabLayout tabLayout;
     @BindView(R.id.viewpager) ViewPager viewPager;
@@ -54,6 +64,7 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
 
     TwitterClient client;
     CurrentUser currentUser;
+    String maxId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +78,6 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
         tabLayout.setupWithViewPager(viewPager);
 
         setSupportActionBar(toolbar);
-
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -164,6 +174,7 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
                 if (errorResponse != null) {
                     Log.d("ON_FAILURE", errorResponse.toString());
                 }
+                checkConnectivity();
             }
         });
     }
@@ -197,38 +208,80 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
         return super.onOptionsItemSelected(item);
     }
 
+    @OnClick(R.id.fab_compose_tweet)
+    public void launchComposeTweetDialog() {
+        if (!checkConnectivity()) {
+            Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        FragmentManager fm = getFragmentManager();
+        ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance("", "");
+        composeTweetFragment.show(fm, "fragment_compose");
+    }
+
     @Override
-    public void onTweetComposed(String screenName, final String tweet) {
+    public void onTweetComposed(String screenName, String statusId, final String tweet) {
         viewPager.setCurrentItem(0);
-//        if (!checkConnectivity()) {
-//            Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        client.postTweet(tweet, "@" + screenName, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-//                Log.d("POST_TWEET","Success!");
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                super.onFailure(statusCode, headers, throwable, errorResponse);
-//                if (errorResponse != null) {
-//                    Log.d("ON_FAILURE", errorResponse.toString());
-//                }
-//                for (int i = 0; i < tweetsList.size(); i++) {
-//                    Tweet thisTweet = tweetsList.get(i);
-//                    if (thisTweet.getText().equals(tweet)) {
-//                        tweetsList.remove(i);
-//                        tweetsAdapter.notifyItemRemoved(i);
-//                        persistToFile(true, tweetsList);
-//                    }
-//                }
-//
-//                checkConnectivity();
-//                Toast.makeText(getBaseContext(), "Tweet posting failed!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        addNewTweetToList(tweet);
+        if (!checkConnectivity()) {
+            Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        client.postTweet(tweet, screenName, statusId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Gson gson = new GsonBuilder().create();
+                Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
+                ViewPagerAdapter vpa = (ViewPagerAdapter) viewPager.getAdapter();
+                BaseTweetListFragment tweetsListFragment = (BaseTweetListFragment) vpa.getItem(viewPager.getCurrentItem());
+                tweetsListFragment.addNewTweetToList(tweet);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                }
+
+                checkConnectivity();
+                Toast.makeText(getBaseContext(), "Tweet posting failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * This method checks connectivity and renders a Snackbar if there's a problem
+     */
+    private boolean checkConnectivity() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        boolean isConnected = (activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting());
+        if (!isConnected || !isOnline()) {
+            Snackbar
+                    .make(mainCoordinatorLayout,
+                            loadTweetsErrorString,
+                            Snackbar.LENGTH_INDEFINITE)
+                    .setAction(retryString, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            loadCurrentUserDetails();
+                        }
+                    })
+                    .setActionTextColor(Color.RED).show();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (IOException | InterruptedException e)
+        { e.printStackTrace(); }
+        return false;
     }
 }

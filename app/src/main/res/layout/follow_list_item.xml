@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:background="@drawable/drawable_transparent_blue_border_round_corners"
+                android:padding="4dp"
+                android:layout_margin="4dp"
+    >
+
+    <ImageView
+        android:id="@+id/image_view_profile_photo"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="4dp"
+        tools:src="@drawable/ic_launcher"
+        />
+
+    <TextView
+        android:id="@+id/text_view_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/colorAccent"
+        android:layout_toRightOf="@id/image_view_profile_photo"
+        tools:text="Yoav Gray יואב גריי"
+        />
+
+    <TextView
+        android:id="@+id/text_view_user_screen_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_toRightOf="@id/image_view_profile_photo"
+        android:layout_below="@id/text_view_user_name"
+        tools:text="\@yoavgray"
+        />
+
+</RelativeLayout>

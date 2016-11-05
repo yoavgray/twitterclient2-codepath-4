@@ -39,7 +39,6 @@ public class TweetsListFragment extends BaseTweetListFragment {
         // Required empty public constructor
     }
 
-
     public static TweetsListFragment newInstance(String param1, String param2) {
         TweetsListFragment fragment = new TweetsListFragment();
         Bundle args = new Bundle();
@@ -59,7 +58,7 @@ public class TweetsListFragment extends BaseTweetListFragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (checkConnectivity()) {
-            loadTweets(1);
+            loadTweets();
         } else {
             renderConnectionErrorSnackBar(feedRecyclerView);
             loadTweetsFromFile();
@@ -74,7 +73,7 @@ public class TweetsListFragment extends BaseTweetListFragment {
             public void onLoadMore(int page, int totalItemsCount) {
                 if (checkConnectivity()) {
                     loadingTweetsRelativeLayout.setVisibility(View.VISIBLE);
-                    loadTweets(page + 1);
+                    loadTweets();
                 } else {
                     renderConnectionErrorSnackBar(feedRecyclerView);
                 }
@@ -92,13 +91,20 @@ public class TweetsListFragment extends BaseTweetListFragment {
                     @Override
                     public void onRefresh() {
                         if (checkConnectivity()) {
-                            loadTweets(1);
+                            maxId = null;
+                            loadTweets();
                         } else {
                             renderConnectionErrorSnackBar(feedRecyclerView);
                         }
                     }
                 });
         }
+
+    @Override
+    public void reloadList() {
+        maxId = null;
+        loadTweets();
+    }
 
     public void persistToFile(final boolean isNew, final List<Tweet> newTweets) {
         // Persist to file another thread to not clog the main thread
@@ -142,14 +148,14 @@ public class TweetsListFragment extends BaseTweetListFragment {
 
     }
 
-    public void loadTweets(final int page) {
-        client.getHomeTimeline(page, new JsonHttpResponseHandler() {
+    public void loadTweets() {
+        client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Gson gson = new GsonBuilder().create();
                 Tweet[] tweets = gson.fromJson(response.toString(), Tweet[].class);
 
-                if (page == 1) {
+                if (maxId == null) {
                     tweetsList.clear();
                     tweetsList.addAll(Arrays.asList(tweets));
                     tweetsAdapter.notifyDataSetChanged();
@@ -161,6 +167,7 @@ public class TweetsListFragment extends BaseTweetListFragment {
                     tweetsAdapter.notifyItemRangeInserted(listSize,20);
                     persistToFile(false, Arrays.asList(tweets));
                 }
+                maxId = tweets[tweets.length-1].getIdStr();
 
                 swipeRefreshLayout.setRefreshing(false);
                 loadingTweetsRelativeLayout.setVisibility(View.GONE);
@@ -197,7 +204,7 @@ public class TweetsListFragment extends BaseTweetListFragment {
                 .setAction(retryString, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        loadTweets(1);
+                        loadTweets();
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 })

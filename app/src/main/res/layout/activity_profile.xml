@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_profile"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relative_layout_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -12,18 +13,18 @@
     <ImageView
         android:id="@+id/image_view_user_cover_photo"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="120dp"
         android:scaleType="centerCrop"
         tools:src="@drawable/twitter_logo_white_on_blue"
         />
 
     <ImageView
         android:id="@+id/image_view_user_profile_photo"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_below="@id/image_view_user_cover_photo"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="-36dp"
+        android:layout_marginTop="-30dp"
         tools:src="@drawable/feather"
         />
 
@@ -31,7 +32,7 @@
         android:id="@+id/text_view_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:textColor="@color/colorAccent"
         android:fontFamily="raleway"
         android:layout_below="@id/image_view_user_profile_photo"
@@ -44,14 +45,25 @@
         android:id="@+id/text_view_user_screen_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:textColor="#d7d7d7"
         android:fontFamily="raleway"
         android:layout_below="@id/text_view_user_name"
         android:layout_alignLeft="@id/text_view_user_name"
-        android:layout_alignRight="@id/text_view_user_name"
-        android:gravity="center_horizontal"
         tools:text="\@yoavgray"
+        />
+
+    <TextView
+        android:id="@+id/text_view_user_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="@color/colorAccent"
+        android:fontFamily="raleway"
+        android:layout_marginTop="4dp"
+        android:layout_below="@id/text_view_user_screen_name"
+        android:layout_alignLeft="@id/text_view_user_screen_name"
+        tools:text="Android developer with Codepath! Good times people, good times!"
         />
 
     <View
@@ -60,21 +72,30 @@
         android:layout_height="2dp"
         android:layout_margin="8dp"
         android:background="@color/colorAccent"
-        android:layout_below="@id/text_view_user_screen_name"/>
+        android:layout_below="@id/text_view_user_description"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_profile_tweets"
-        android:layout_below="@id/profile_vertical_separator"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:layout_below="@id/profile_vertical_separator"
+        android:background="@color/colorAccent"
+        app:tabIndicatorColor="@android:color/white"
+        app:tabGravity="fill"
+        app:tabMode="fixed" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/sliding_tabs"
+        android:background="@android:color/white" />
 
     <RelativeLayout
-        android:layout_width="174dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:background="@drawable/drawable_transparent_blue_border_round_corners"
-        android:layout_alignBaseline="@+id/text_view_user_name"
-        android:layout_alignBottom="@+id/text_view_user_name"
+        android:layout_alignBottom="@id/text_view_user_screen_name"
         android:layout_alignRight="@+id/profile_vertical_separator"
         android:layout_alignEnd="@+id/profile_vertical_separator"
         >
@@ -83,12 +104,12 @@
             android:id="@+id/text_view_profile_followers_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textColor="@color/colorAccent"
             android:textStyle="bold|italic"
             android:fontFamily="raleway"
             android:layout_marginTop="2dp"
-            android:layout_marginRight="12dp"
+            android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:text="@string/followers" />
@@ -100,6 +121,7 @@
             android:layout_below="@id/text_view_profile_followers_label"
             android:layout_alignLeft="@id/text_view_profile_followers_label"
             android:layout_alignRight="@id/text_view_profile_followers_label"
+            android:textSize="12sp"
             android:layout_marginBottom="6dp"
             tools:text="34"
             android:gravity="center_horizontal"
@@ -109,7 +131,7 @@
             android:id="@+id/text_view_profile_following_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textColor="@color/colorAccent"
             android:textStyle="bold|italic"
             android:fontFamily="raleway"
@@ -126,6 +148,7 @@
             android:layout_below="@id/text_view_profile_following_label"
             android:layout_alignLeft="@id/text_view_profile_following_label"
             android:layout_alignRight="@id/text_view_profile_following_label"
+            android:textSize="12sp"
             tools:text="34"
             android:gravity="center_horizontal"
             />

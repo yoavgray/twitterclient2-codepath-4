@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +25,6 @@ import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.fragments.ComposeTweetFragment;
 import com.yoav.twitterclient.fragments.TweetDetailsFragment;
-import com.yoav.twitterclient.fragments.TweetsListFragment;
 import com.yoav.twitterclient.models.CurrentUser;
 import com.yoav.twitterclient.models.Entities;
 import com.yoav.twitterclient.models.ExtendedEntities;
@@ -64,7 +62,7 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-public class FeedActivity extends AppCompatActivity implements ComposeTweetFragment.TweetComposedListener {
+public class FeedActivity extends AppCompatActivity {
     public final static String TWEETS_FILE_NAME = "tweetsFileName";
 
     @BindView(R.id.swipe_refresh_container) SwipeRefreshLayout swipeRefreshLayout;
@@ -183,50 +181,40 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
                 android.R.color.holo_red_light);
     }
 
-    @OnClick(R.id.fab_compose_tweet)
-    public void launchComposeTweetDialog() {
-        if (!checkConnectivity()) {
-            Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        FragmentManager fm = getFragmentManager();
-        ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance("");
-        composeTweetFragment.show(fm, "fragment_compose");
-    }
 
-    @Override
-    public void onTweetComposed(String screenName, final String tweet) {
-        if (!checkConnectivity()) {
-            Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        client.postTweet(tweet, "@" + screenName, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("POST_TWEET","Success!");
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                if (errorResponse != null) {
-                    Log.d("ON_FAILURE", errorResponse.toString());
-                }
-                for (int i = 0; i < tweetsList.size(); i++) {
-                    Tweet thisTweet = tweetsList.get(i);
-                    if (thisTweet.getText().equals(tweet)) {
-                        tweetsList.remove(i);
-                        tweetsAdapter.notifyItemRemoved(i);
-                        persistToFile(true, tweetsList);
-                    }
-                }
-
-                checkConnectivity();
-                Toast.makeText(getBaseContext(), "Tweet posting failed!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        addNewTweetToList(tweet);
-    }
+//    @Override
+//    public void onTweetComposed(String screenName, final String tweet) {
+//        if (!checkConnectivity()) {
+//            Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        client.postTweet(tweet, "@" + screenName, new JsonHttpResponseHandler() {
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+//                Log.d("POST_TWEET","Success!");
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                super.onFailure(statusCode, headers, throwable, errorResponse);
+//                if (errorResponse != null) {
+//                    Log.d("ON_FAILURE", errorResponse.toString());
+//                }
+//                for (int i = 0; i < tweetsList.size(); i++) {
+//                    Tweet thisTweet = tweetsList.get(i);
+//                    if (thisTweet.getText().equals(tweet)) {
+//                        tweetsList.remove(i);
+//                        tweetsAdapter.notifyItemRemoved(i);
+//                        persistToFile(true, tweetsList);
+//                    }
+//                }
+//
+//                checkConnectivity();
+//                Toast.makeText(getBaseContext(), "Tweet posting failed!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        addNewTweetToList(tweet);
+//    }
 
     private void addNewTweetToList(String tweet) {
         Tweet newTweet = new Tweet();
@@ -247,7 +235,7 @@ public class FeedActivity extends AppCompatActivity implements ComposeTweetFragm
     }
 
     public void loadTweets(final int page) {
-        client.getHomeTimeline(page, new JsonHttpResponseHandler() {
+        client.getHomeTimeline("", new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Gson gson = new GsonBuilder().create();

@@ -22,12 +22,10 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -103,6 +101,11 @@ public class MentionsListFragment extends BaseTweetListFragment {
                 });
     }
 
+    @Override
+    public void reloadList() {
+        loadMentions();
+    }
+
     public void persistToFile(final boolean isNew, final List<Tweet> newTweets) {
         // Persist to file another thread to not clog the main thread
         Thread otherThread = new Thread(new Runnable() {
@@ -110,9 +113,9 @@ public class MentionsListFragment extends BaseTweetListFragment {
             public void run() {
                 FileOutputStream outputStream;
                 try {
-                    if (isNew) {
-                        clearTweetsFile();
-                    }
+//                    if (isNew) {
+//                        clearTweetsFile();
+//                    }
                     outputStream = getContext().openFileOutput(MENTIONS_FILE_NAME, Context.MODE_PRIVATE);
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
                     for (int i = 0; i < newTweets.size(); i++) {
@@ -172,17 +175,17 @@ public class MentionsListFragment extends BaseTweetListFragment {
             }
         });
     }
-
-    public void clearTweetsFile() {
-        PrintWriter writer;
-        try {
-            writer = new PrintWriter(MENTIONS_FILE_NAME);
-            writer.print("");
-            writer.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+//
+//    public void clearTweetsFile() {
+//        PrintWriter writer;
+//        try {
+//            writer = new PrintWriter(MENTIONS_FILE_NAME);
+//            writer.print("");
+//            writer.close();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void renderConnectionErrorSnackBar(RecyclerView feedRecyclerView) {
         Snackbar
