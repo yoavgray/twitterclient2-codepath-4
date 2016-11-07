@@ -77,6 +77,14 @@ public class User {
         return followers_count;
     }
 
+    public Boolean wasFollowRequestSent() {
+        return follow_request_sent;
+    }
+
+    public Boolean getFollowing() {
+        return following;
+    }
+
     public String getIdStr() {
         return id_str;
     }

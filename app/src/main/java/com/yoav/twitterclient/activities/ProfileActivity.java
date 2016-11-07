@@ -1,7 +1,7 @@
 package com.yoav.twitterclient.activities;
 
-import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -64,11 +65,15 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
     @BindView(R.id.text_view_user_description) TextView descriptionTextView;
     @BindView(R.id.text_view_following_count) TextView followingCountTextView;
     @BindView(R.id.text_view_followers_count) TextView followersCountTextView;
+    @BindView(R.id.text_view_follow_status) TextView followStatusTextView;
+
     @BindView(R.id.viewpager) ViewPager viewPager;
     @BindView(R.id.sliding_tabs) TabLayout tabLayout;
 
     @BindString(R.string.load_tweets_error) String loadTweetsErrorString;
     @BindString(R.string.retry) String retryString;
+    @BindString(R.string.following) String followingString;
+    @BindString(R.string.send_follow_request) String sendFollowRequestString;
 
     TwitterClient client;
     User user;
@@ -114,10 +119,14 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
     }
 
     private void loadProfile() {
-        Glide.with(this).load(user.getCoverPhotoUrl().replace("_normal", "")).centerCrop().into(userCoverPhoto);
-        Glide.with(this).load(user.getProfilePhotoUrl().replace("_normal", "")).centerCrop()
-                .bitmapTransform(new RoundedCornersTransformation(this, 3, 3))
-                .into(userProfilePhoto);
+        if (user.getCoverPhotoUrl() != null) {
+            Glide.with(this).load(user.getCoverPhotoUrl().replace("_normal", "")).centerCrop().into(userCoverPhoto);
+        }
+        if (user.getProfilePhotoUrl() != null) {
+            Glide.with(this).load(user.getProfilePhotoUrl().replace("_normal", "")).centerCrop()
+                    .bitmapTransform(new RoundedCornersTransformation(this, 3, 3))
+                    .into(userProfilePhoto);
+        }
         userNameTextView.setText(user.getName());
         String screenName = "@" + user.getScreenName();
         userScreenNameTextView.setText(screenName);
@@ -128,8 +137,78 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
             descriptionTextView.setVisibility(View.GONE);
         }
 
+        if (user.getFollowing() != null && user.getFollowing()) {
+            followStatusTextView.setText(followingString);
+        } else {
+            followStatusTextView.setText(sendFollowRequestString);
+        }
+        followStatusTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (followStatusTextView.getText().toString().equals(sendFollowRequestString)) {
+                    followUser(user.getIdStr());
+                } else {
+                    new AlertDialog.Builder(ProfileActivity.this, R.style.AlertDialogStyle)
+                            .setTitle("Unfollow User")
+                            .setMessage("Are you sure you want to unfollow " + user.getName())
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    unfollowUser(user.getIdStr());
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+            }
+        });
+
         followersCountTextView.setText(String.valueOf(user.getFollowersCount()));
         followingCountTextView.setText(String.valueOf(user.getFollowingCount()));
+    }
+
+    private void followUser(String userId) {
+        client.postFollowUser(userId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Gson gson = new GsonBuilder().create();
+                user = gson.fromJson(response.toString(), User.class);
+                followStatusTextView.setText(followingString);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                }
+                checkConnectivity();
+            }
+        });
+    }
+
+    private void unfollowUser(String userId) {
+        client.postUnfollowUser(userId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Gson gson = new GsonBuilder().create();
+                user = gson.fromJson(response.toString(), User.class);
+                followStatusTextView.setText(sendFollowRequestString);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                }
+                checkConnectivity();
+            }
+        });
     }
 
     private void loadUser(String userId, String screenName) {

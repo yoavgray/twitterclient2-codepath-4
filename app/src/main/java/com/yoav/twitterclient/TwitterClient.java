@@ -157,4 +157,22 @@ public class TwitterClient extends OAuthBaseClient {
         params.put("id", statusId);
         getClient().post(apiUrl, params, handler);
     }
+
+    public void postFollowUser(String userId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("friendships/create.json");
+        RequestParams params = new RequestParams();
+        params.put("user_id", userId);
+        // Allow notifications from user
+        params.put("follow", true);
+        getClient().post(apiUrl, params, handler);
+    }
+
+    public void postUnfollowUser(String userId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("friendships/destroy.json");
+        RequestParams params = new RequestParams();
+        params.put("user_id", userId);
+        // Allow notifications from user
+        params.put("follow", true);
+        getClient().post(apiUrl, params, handler);
+    }
 }

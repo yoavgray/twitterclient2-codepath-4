@@ -31,8 +31,6 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-import static com.yoav.twitterclient.TwitterApplication.CURRENT_USER_KEY;
-
 public class MentionsListFragment extends BaseTweetListFragment {
     public final static String MENTIONS_FILE_NAME = "mentionsFileName";
 

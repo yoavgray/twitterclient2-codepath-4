@@ -113,7 +113,6 @@ public class TweetsListFragment extends BaseTweetListFragment {
                     }
                     writer.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         });

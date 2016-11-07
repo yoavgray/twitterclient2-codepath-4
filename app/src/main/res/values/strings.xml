@@ -23,5 +23,6 @@
     <string name="profile">Profile</string>
     <string name="following">Following</string>
     <string name="followers">Followers</string>
+    <string name="send_follow_request">Send Follow Request</string>
 
 </resources>
