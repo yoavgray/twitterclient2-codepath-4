@@ -70,6 +70,7 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
     TwitterClient client;
     CurrentUser currentUser;
     String maxId = null;
+    MenuItem searchItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,10 +151,9 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                queryParamsHashMap.remove(QUERY_KEY);
-//                loadArticles(0);
                     searchView.setQuery("", false);
                     searchView.clearFocus();
+                    searchView.setIconified(true);
                 }
             });
         } catch (NoSuchFieldException e) {
@@ -191,7 +191,9 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchItem = menu.findItem(R.id.action_search);
+
+        SearchView searchView = (SearchView) searchItem.getActionView();
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setSubmitButtonEnabled(true);

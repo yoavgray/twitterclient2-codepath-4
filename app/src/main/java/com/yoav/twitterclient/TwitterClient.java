@@ -82,10 +82,14 @@ public class TwitterClient extends OAuthBaseClient {
 		getClient().get(apiUrl, params, handler);
 	}
 
-    public void getUser(String userId, AsyncHttpResponseHandler handler) {
+    public void getUser(String userId, String screenName, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("users/show.json");
         RequestParams params = new RequestParams();
-        params.put("user_id", userId);
+        if (userId == null) {
+            params.put("screen_name", screenName);
+        } else {
+            params.put("user_id", userId);
+        }
         getClient().get(apiUrl, params, handler);
     }
 

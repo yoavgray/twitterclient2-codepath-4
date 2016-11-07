@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.R;
+import com.yoav.twitterclient.TwitterApplication;
 import com.yoav.twitterclient.TwitterClient;
 import com.yoav.twitterclient.adapters.TweetsAdapter;
 import com.yoav.twitterclient.adapters.ViewPagerAdapter;
@@ -71,7 +72,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
 
     TwitterClient client;
     User user;
-    String userId;
+    String userId, screenName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,8 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
             loadProfile();
         } else {
             userId = getIntent().getStringExtra(USER_ID_KEY);
-            loadUser(userId);
+            screenName = getIntent().getStringExtra(TwitterApplication.SCREEN_NAME_KEY);
+            loadUser(userId, screenName);
         }
     }
 
@@ -130,8 +132,8 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
         followingCountTextView.setText(String.valueOf(user.getFollowingCount()));
     }
 
-    private void loadUser(String userId) {
-        client.getUser(userId, new JsonHttpResponseHandler() {
+    private void loadUser(String userId, String screenName) {
+        client.getUser(userId, screenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder().create();
@@ -174,7 +176,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
                     .setAction(retryString, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            loadUser(userId);
+                            loadUser(userId, screenName);
                         }
                     })
                     .setActionTextColor(Color.RED).show();

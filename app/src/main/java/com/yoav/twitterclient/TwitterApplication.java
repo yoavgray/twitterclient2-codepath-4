@@ -13,6 +13,7 @@ import android.content.Context;
  *
  */
 public class TwitterApplication extends Application {
+	public static final String SCREEN_NAME_KEY = "user";
 	public static final String USER_KEY = "user";
 	public static final String USER_ID_KEY = "userId";
 	public static final String TIMELINE_KEY = "timeline";

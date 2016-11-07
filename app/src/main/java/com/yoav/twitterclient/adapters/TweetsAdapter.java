@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -21,11 +24,13 @@ import com.yoav.twitterclient.models.Media;
 import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.models.Url;
 import com.yoav.twitterclient.models.User;
+import com.yoav.twitterclient.utils.PatternEditableBuilder;
 import com.yoav.twitterclient.viewholders.TweetViewHolder;
 
 import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -138,6 +143,7 @@ public class TweetsAdapter extends
         String nickname = "@" + user.getScreenName();
         holder.getUserNicknameTextView().setText(nickname);
         holder.getWhenPublishedTextView().setText(finalTweet.getRelativeTimeAgo(finalTweet.getCreatedAt()));
+
         String tweetBody = finalTweet.getText();
 
         //Try removing a Twitter URL if present, though this may be null even if there's a URL
@@ -163,6 +169,26 @@ public class TweetsAdapter extends
         }
 
         holder.getTweetBodyTextView().setText(tweetBody);
+        // Set spannable styles and behavior
+        new PatternEditableBuilder().
+                addPattern(Pattern.compile("\\@(\\w+)"), R.color.colorAccent,
+                        new PatternEditableBuilder.SpannableClickedListener() {
+                            @Override
+                            public void onSpanClicked(String text) {
+                                Intent i = new Intent(getContext(), ProfileActivity.class);
+                                i.putExtra(TwitterApplication.SCREEN_NAME_KEY, text.substring(1));
+                                getContext().startActivity(i);
+                            }
+                        }).
+                addPattern(Pattern.compile("\\#(\\w+)"), R.color.colorAccent,
+                        new PatternEditableBuilder.SpannableClickedListener() {
+                            @Override
+                            public void onSpanClicked(String text) {
+                                Toast.makeText(getContext(), "Clicked hashtag: " + text,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }).into(holder.getTweetBodyTextView());
+
 
         // Check if we got a notification from parent activity that a favorite/retweet event just happened;
         holder.getFavoritesCountTextView().setText(String.valueOf(finalTweet.getFavoriteCount()));
