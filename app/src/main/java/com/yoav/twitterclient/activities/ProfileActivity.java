@@ -3,6 +3,7 @@ package com.yoav.twitterclient.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -26,7 +27,7 @@ import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.TwitterApplication;
-import com.yoav.twitterclient.TwitterClient;
+import com.yoav.twitterclient.networking.TwitterClient;
 import com.yoav.twitterclient.adapters.TweetsAdapter;
 import com.yoav.twitterclient.adapters.ViewPagerAdapter;
 import com.yoav.twitterclient.fragments.BaseTweetListFragment;
@@ -65,6 +66,8 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
     @BindView(R.id.text_view_user_description) TextView descriptionTextView;
     @BindView(R.id.text_view_following_count) TextView followingCountTextView;
     @BindView(R.id.text_view_followers_count) TextView followersCountTextView;
+    @BindView(R.id.text_view_profile_following_label) TextView followingLabelTextView;
+    @BindView(R.id.text_view_profile_followers_label) TextView followersLabelTextView;
     @BindView(R.id.text_view_follow_status) TextView followStatusTextView;
 
     @BindView(R.id.viewpager) ViewPager viewPager;
@@ -102,8 +105,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
 //        showProgressBar();
         return super.onCreateView(parent, name, context, attrs);
     }
-
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -167,6 +168,8 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
             }
         });
 
+        followingLabelTextView.setPaintFlags(followingLabelTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        followersLabelTextView.setPaintFlags(followingLabelTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         followersCountTextView.setText(String.valueOf(user.getFollowersCount()));
         followingCountTextView.setText(String.valueOf(user.getFollowingCount()));
     }

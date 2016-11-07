@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -150,10 +151,14 @@ public class TweetsListFragment extends BaseTweetListFragment {
                     tweetsAdapter.notifyDataSetChanged();
                     persistToFile(true, tweetsList);
                 } else {
+                    // Now we're adding tweets to a list so we need to just add and not clear
+                    // and also to remove duplicate
                     int listSize = tweetsList.size();
-                    tweetsList.addAll(Arrays.asList(tweets).subList(1, tweets.length - 1));
+                    ArrayList<Tweet> newList = new ArrayList<>(Arrays.asList(tweets));
+                    // Remove duplicate tweet
+                    newList.remove(0);
+                    tweetsList.addAll(newList);
                     tweetsAdapter.notifyItemRangeInserted(listSize,20);
-                    persistToFile(false, Arrays.asList(tweets));
                 }
                 maxId = tweets[tweets.length-1].getIdStr();
 

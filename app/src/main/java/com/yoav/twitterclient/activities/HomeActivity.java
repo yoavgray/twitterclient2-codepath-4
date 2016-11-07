@@ -28,7 +28,7 @@ import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.TwitterApplication;
-import com.yoav.twitterclient.TwitterClient;
+import com.yoav.twitterclient.networking.TwitterClient;
 import com.yoav.twitterclient.adapters.TweetsAdapter;
 import com.yoav.twitterclient.adapters.ViewPagerAdapter;
 import com.yoav.twitterclient.fragments.BaseTweetListFragment;
@@ -88,7 +88,6 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new TweetsListFragment(), "Timeline");
         adapter.addFragment(new MentionsListFragment(), "Mentions");
-        adapter.addFragment(new TweetsListFragment(), "Suggestions");
         viewPager.setAdapter(adapter);
     }
 
@@ -233,7 +232,7 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
             Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
             return;
         }
-        client.postTweet(tweet, screenName, statusId, new JsonHttpResponseHandler() {
+        client.postTweet(tweet, statusId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder().create();

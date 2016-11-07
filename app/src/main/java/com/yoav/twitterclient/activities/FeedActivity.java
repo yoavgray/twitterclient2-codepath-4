@@ -17,24 +17,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.yoav.twitterclient.fragments.ComposeTweetFragment;
 import com.yoav.twitterclient.fragments.TweetDetailsFragment;
 import com.yoav.twitterclient.models.CurrentUser;
-import com.yoav.twitterclient.models.Entities;
-import com.yoav.twitterclient.models.ExtendedEntities;
-import com.yoav.twitterclient.models.User;
 import com.yoav.twitterclient.utils.EndlessRecyclerViewScrollListener;
 import com.yoav.twitterclient.utils.ItemClickSupport;
 import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.adapters.TweetsAdapter;
 import com.yoav.twitterclient.TwitterApplication;
-import com.yoav.twitterclient.TwitterClient;
+import com.yoav.twitterclient.networking.TwitterClient;
 import com.yoav.twitterclient.models.Tweet;
 
 import org.json.JSONArray;
@@ -48,17 +43,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 

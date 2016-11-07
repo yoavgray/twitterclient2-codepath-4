@@ -19,14 +19,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.R;
-import com.yoav.twitterclient.TwitterClient;
+import com.yoav.twitterclient.networking.TwitterClient;
 import com.yoav.twitterclient.adapters.UsersAdapter;
-import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.models.User;
 import com.yoav.twitterclient.models.UsersList;
 import com.yoav.twitterclient.utils.EndlessRecyclerViewScrollListener;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;

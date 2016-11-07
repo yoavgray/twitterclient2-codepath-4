@@ -1,16 +1,11 @@
 package com.yoav.twitterclient.fragments;
 
-import android.content.Context;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,8 +16,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.R;
-import com.yoav.twitterclient.TwitterClient;
-import com.yoav.twitterclient.adapters.TweetsAdapter;
 import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.models.User;
 import com.yoav.twitterclient.utils.EndlessRecyclerViewScrollListener;
@@ -31,13 +24,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import butterknife.BindString;
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
@@ -168,8 +157,13 @@ public class ProfileTweetListFragment extends BaseTweetListFragment {
                     tweetsList.addAll(Arrays.asList(tweets));
                     tweetsAdapter.notifyDataSetChanged();
                 } else {
+                    // Now we're adding tweets to a list so we need to just add and not clear
+                    // and also to remove duplicate
                     int listSize = tweetsList.size();
-                    tweetsList.addAll(Arrays.asList(tweets).subList(1, tweets.length - 1));
+                    ArrayList<Tweet> newList = new ArrayList<>(Arrays.asList(tweets));
+                    // Remove duplicate tweet
+                    newList.remove(0);
+                    tweetsList.addAll(newList);
                     tweetsAdapter.notifyItemRangeInserted(listSize,20);
                 }
                 maxId = tweets[tweets.length-1].getIdStr();

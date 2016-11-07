@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 
 import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.TwitterApplication;
-import com.yoav.twitterclient.TwitterClient;
+import com.yoav.twitterclient.networking.TwitterClient;
 import com.yoav.twitterclient.adapters.TweetsAdapter;
 import com.yoav.twitterclient.models.CurrentUser;
 import com.yoav.twitterclient.models.Tweet;

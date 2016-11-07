@@ -50,7 +50,7 @@ public class ComposeTweetFragment extends DialogFragment {
         ComposeTweetFragment fragment = new ComposeTweetFragment();
         Bundle args = new Bundle();
         args.putString(SCREEN_NAME_KEY, screenName);
-        args.putString(STATUS_ID_KEY, screenName);
+        args.putString(STATUS_ID_KEY, statusId);
         fragment.setArguments(args);
         return fragment;
     }

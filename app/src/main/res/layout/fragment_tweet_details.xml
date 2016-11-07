@@ -79,9 +79,9 @@
         <ImageView
             android:id="@+id/image_view_tweet_embedded_image"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:maxHeight="300dp"
+            android:maxHeight="200dp"
             android:layout_below="@id/text_view_tweet_body"
             android:layout_alignLeft="@id/text_view_tweet_body"
             android:visibility="gone"
@@ -100,7 +100,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_below="@id/view_vertical_separator"
             android:layout_alignLeft="@id/text_view_tweet_body"
             android:layout_marginTop="10dp"

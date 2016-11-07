@@ -21,13 +21,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.R;
-import com.yoav.twitterclient.TwitterClient;
+import com.yoav.twitterclient.networking.TwitterClient;
 import com.yoav.twitterclient.adapters.TweetsAdapter;
 import com.yoav.twitterclient.models.SearchResult;
 import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.utils.EndlessRecyclerViewScrollListener;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -49,7 +48,6 @@ public class SearchActivity extends AppCompatActivity implements TweetsAdapter.O
     @BindString(R.string.load_tweets_error) String loadTweetsErrorString;
     @BindString(R.string.retry) String retryString;
 
-
     TwitterClient client;
     List<Tweet> tweetsList;
     TweetsAdapter adapter;
@@ -61,17 +59,25 @@ public class SearchActivity extends AppCompatActivity implements TweetsAdapter.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
-        client = new TwitterClient(this);
-        tweetsList = new ArrayList<>();
-        adapter = new TweetsAdapter(this, tweetsList);
+        initializeMembers();
         setupRecyclerView();
         setupSwipeRefreshLayout();
         // Get the intent, verify the action and get the query
+        handleIntent();
+    }
+
+    private void handleIntent() {
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
             searchTwitter();
         }
+    }
+
+    private void initializeMembers() {
+        client = new TwitterClient(this);
+        tweetsList = new ArrayList<>();
+        adapter = new TweetsAdapter(this, tweetsList);
     }
 
     private void setupRecyclerView() {
@@ -84,11 +90,9 @@ public class SearchActivity extends AppCompatActivity implements TweetsAdapter.O
         recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
+                showProgressBar();
                 if (checkConnectivity()) {
-//                    showProgressBar();
                     searchTwitter();
-                } else {
-                    //renderConnectionErrorSnackBar(feedRecyclerView);
                 }
             }
         });
@@ -108,18 +112,17 @@ public class SearchActivity extends AppCompatActivity implements TweetsAdapter.O
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-//                        showProgressBar();
+                        showProgressBar();
                         if (checkConnectivity()) {
                             maxId = null;
                             searchTwitter();
-                        } else {
-//                            renderConnectionErrorSnackBar(feedRecyclerView);
                         }
                     }
                 });
     }
 
     private void searchTwitter() {
+        showProgressBar();
         client.searchTwitter(maxId, query, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -138,6 +141,7 @@ public class SearchActivity extends AppCompatActivity implements TweetsAdapter.O
                 }
                 maxId = tweets[tweets.length-1].getIdStr();
                 swipeRefreshLayout.setRefreshing(false);
+                hideProgressBar();
             }
 
             @Override
@@ -276,7 +280,8 @@ public class SearchActivity extends AppCompatActivity implements TweetsAdapter.O
                     .setAction(retryString, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//                            loadCurrentUserDetails();
+                            maxId = null;
+                            searchTwitter();
                         }
                     })
                     .setActionTextColor(Color.RED).show();
@@ -296,4 +301,11 @@ public class SearchActivity extends AppCompatActivity implements TweetsAdapter.O
         return false;
     }
 
+    protected void showProgressBar() {
+        relativeLayoutLoadingTweets.setVisibility(View.VISIBLE);
+    }
+
+    protected void hideProgressBar() {
+        relativeLayoutLoadingTweets.setVisibility(View.GONE);
+    }
 }

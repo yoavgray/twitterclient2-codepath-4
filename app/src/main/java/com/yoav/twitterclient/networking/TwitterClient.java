@@ -1,4 +1,4 @@
-package com.yoav.twitterclient;
+package com.yoav.twitterclient.networking;
 
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
@@ -117,7 +117,7 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(apiUrl, params, handler);
     }
 
-	public void postTweet(String body, String screenName, String statusId, AsyncHttpResponseHandler handler) {
+	public void postTweet(String body, String statusId, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/update.json");
         RequestParams params = new RequestParams();
         params.put("status", body);
