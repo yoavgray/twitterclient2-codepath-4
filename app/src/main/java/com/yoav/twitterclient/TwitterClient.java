@@ -7,7 +7,11 @@ import android.content.Context;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /*
  * 
@@ -174,5 +178,20 @@ public class TwitterClient extends OAuthBaseClient {
         // Allow notifications from user
         params.put("follow", true);
         getClient().post(apiUrl, params, handler);
+    }
+
+    public void searchTwitter(String maxId, String query, JsonHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("search/tweets.json");
+        RequestParams params = new RequestParams();
+        try {
+            if (maxId != null) {
+                params.put("max_id", maxId);
+            }
+            params.put("q", URLEncoder.encode(query, "UTF-8"));
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        getClient().get(apiUrl, params, handler);
     }
 }

@@ -101,17 +101,16 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-//                queryParamsHashMap.put(QUERY_KEY, query);
-//                loadArticles(0);
-                // Must return true if we want to consume the event!
+                Intent i = new Intent(HomeActivity.this, SearchActivity.class);
+                i.putExtra(SearchManager.QUERY, query);
+                i.setAction(Intent.ACTION_SEARCH);
+                startActivity(i);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (StringUtils.isEmpty(newText)) {
-//                    queryParamsHashMap.remove(QUERY_KEY);
-//                    loadArticles(0);
                 }
                 return true;
             }

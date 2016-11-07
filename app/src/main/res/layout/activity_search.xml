@@ -1,15 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_search"
+    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.yoav.twitterclient.activities.SearchActivity"
-    >
+    android:layout_height="match_parent">
 
-</RelativeLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_refresh_container"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_feed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_layout_loading_tweets"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_anchor="@id/swipe_refresh_container"
+        app:layout_anchorGravity="bottom|right|end"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:background="@android:color/white"
+        >
+
+        <TextView
+            android:id="@+id/text_view_loading_more_tweets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loading"
+            android:textSize="20sp"
+            android:fontFamily="Arial"
+            android:textStyle="italic"
+            android:background="@android:color/white"
+            android:textColor="@color/colorAccent"
+            android:gravity="center_vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_loading_tweets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_toRightOf="@id/text_view_loading_more_tweets"
+            android:layout_alignTop="@id/text_view_loading_more_tweets"
+            android:layout_alignParentBottom="true"
+            tools:visibility="visible"
+            />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -111,7 +111,7 @@ public class TweetsAdapter extends
             listener = (OnTweetChangedListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnTweetChangedListener");
         }
 
         Tweet tweet = tweets.get(position);

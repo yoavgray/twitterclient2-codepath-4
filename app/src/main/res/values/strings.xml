@@ -24,5 +24,6 @@
     <string name="following">Following</string>
     <string name="followers">Followers</string>
     <string name="send_follow_request">Send Follow Request</string>
+    <string name="search_hint">Search Tweets...</string>
 
 </resources>

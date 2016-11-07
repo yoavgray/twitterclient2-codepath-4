@@ -12,12 +12,10 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.yoav.twitterclient.models.CurrentUser;
 import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.utils.EndlessRecyclerViewScrollListener;
 
 import org.json.JSONArray;
-import org.parceler.Parcels;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
