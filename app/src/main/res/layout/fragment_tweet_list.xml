@@ -1,26 +1,33 @@
-<android.support.v4.widget.SwipeRefreshLayout
+<android.support.design.widget.CoordinatorLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_refresh_container"
-    android:background="@android:color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    >
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_feed"
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_refresh_container"
+        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_feed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <RelativeLayout
         android:id="@+id/relative_layout_loading_tweets"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
-        app:layout_anchor="@id/main_fragment_container"
+        app:layout_anchor="@id/swipe_refresh_container"
         app:layout_anchorGravity="bottom|right|end"
         android:visibility="gone"
         tools:visibility="visible"
@@ -31,7 +38,7 @@
             android:id="@+id/text_view_loading_more_tweets"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/loading_tweets"
+            android:text="@string/loading"
             android:textSize="20sp"
             android:fontFamily="Arial"
             android:textStyle="italic"
@@ -55,4 +62,4 @@
 
     </RelativeLayout>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+</android.support.design.widget.CoordinatorLayout>

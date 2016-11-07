@@ -1,5 +1,6 @@
 package com.yoav.twitterclient.activities;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -7,10 +8,11 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,16 +25,20 @@ import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.TwitterClient;
+import com.yoav.twitterclient.adapters.TweetsAdapter;
 import com.yoav.twitterclient.adapters.ViewPagerAdapter;
-import com.yoav.twitterclient.fragments.ComposeTweetFragment;
+import com.yoav.twitterclient.fragments.BaseTweetListFragment;
 import com.yoav.twitterclient.fragments.FollowFragment;
 import com.yoav.twitterclient.fragments.ProfileTweetListFragment;
+import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.models.User;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -46,7 +52,10 @@ import static com.yoav.twitterclient.TwitterApplication.TIMELINE_KEY;
 import static com.yoav.twitterclient.TwitterApplication.USER_ID_KEY;
 import static com.yoav.twitterclient.TwitterApplication.USER_KEY;
 
-public class ProfileActivity extends AppCompatActivity implements ProfileTweetListFragment.OnFragmentInteractionListener {
+public class ProfileActivity extends AppCompatActivity implements ProfileTweetListFragment.OnFragmentInteractionListener,
+        TweetsAdapter.OnTweetChangedListener {
+    private static final String FOLLOWING_ARG = "following";
+    private static final String FOLLOWERS_ARG = "followers";
     @BindView(R.id.image_view_user_cover_photo) ImageView userCoverPhoto;
     @BindView(R.id.image_view_user_profile_photo) ImageView userProfilePhoto;
     @BindView(R.id.text_view_user_name) TextView userNameTextView;
@@ -80,6 +89,14 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
             loadUser(userId);
         }
     }
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+//        showProgressBar();
+        return super.onCreateView(parent, name, context, attrs);
+    }
+
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -170,24 +187,177 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
         Runtime runtime = Runtime.getRuntime();
         try {
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
+            int exitValue = ipProcess.waitFor();
             return (exitValue == 0);
-        } catch (IOException | InterruptedException e)
-        { e.printStackTrace(); }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @OnClick(R.id.text_view_profile_followers_label)
     public void loadFollowersDialog() {
         android.app.FragmentManager fm = getFragmentManager();
-        FollowFragment followFragment = FollowFragment.newInstance(userId, "followers");
+        FollowFragment followFragment = FollowFragment.newInstance(userId, FOLLOWERS_ARG);
         followFragment.show(fm, "fragment_follow");
     }
 
     @OnClick(R.id.text_view_profile_following_label)
     public void loadFollowingDialog() {
         android.app.FragmentManager fm = getFragmentManager();
-        FollowFragment followFragment = FollowFragment.newInstance(userId, "following");
+        FollowFragment followFragment = FollowFragment.newInstance(userId, FOLLOWING_ARG);
         followFragment.show(fm, "fragment_follow");
+    }
+
+    /**
+     * This method customizes the icon of the submit button
+     *
+     * @param searchView
+     */
+    private void customizeSubmitButton(SearchView searchView) {
+        // Set the submit button to be a custom button
+        try {
+            Field searchField = SearchView.class.getDeclaredField("mGoButton");
+            searchField.setAccessible(true);
+            ImageView submitButton = (ImageView) searchField.get(searchView);
+            submitButton.setImageResource(R.drawable.ic_submit);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method customized the X button to load fresh articles with no queries
+     *
+     * @param searchView
+     */
+    private void customizeCloseButton(final SearchView searchView) {
+        Field searchField = null;
+        try {
+            searchField = SearchView.class.getDeclaredField("mCloseButton");
+            searchField.setAccessible(true);
+            ImageView closeButton = (ImageView) searchField.get(searchView);
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                queryParamsHashMap.remove(QUERY_KEY);
+//                loadArticles(0);
+                    searchView.setQuery("", false);
+                    searchView.clearFocus();
+                }
+            });
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method sets a listener for when submiting a text query or changing text
+     * in the search field //TODO: add suggestions if have time
+     *
+     * @param searchView
+     */
+    private void setSearchViewListener(SearchView searchView) {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+//                queryParamsHashMap.put(QUERY_KEY, query);
+//                loadArticles(0);
+                // Must return true if we want to consume the event!
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (StringUtils.isEmpty(newText)) {
+//                    queryParamsHashMap.remove(QUERY_KEY);
+//                    loadArticles(0);
+                }
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void onTweetFavorited(boolean isFavorited, String statusId) {
+        if (isFavorited) {
+            postFavorite(statusId);
+        } else {
+            postUnFavorite(statusId);
+        }
+    }
+
+    @Override
+    public void onTweetRetweeted(String statusId) {
+        postRetweeted(statusId);
+    }
+
+    private void postRetweeted(String statusId) {
+        client.postRetweet(statusId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(getBaseContext(), "Retweeted Tweet!", Toast.LENGTH_SHORT).show();
+                ViewPagerAdapter vpa = (ViewPagerAdapter) viewPager.getAdapter();
+                BaseTweetListFragment tweetsListFragment = (BaseTweetListFragment) vpa.getItem(viewPager.getCurrentItem());
+                Gson gson = new GsonBuilder().create();
+                Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
+                tweetsListFragment.onRetweetSuccess(tweet.getIdStr());
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                }
+
+                checkConnectivity();
+                Toast.makeText(getBaseContext(), "Failed Retweeting Tweet!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void postUnFavorite(String statusId) {
+        client.postunFavorite(statusId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(getBaseContext(), "Unfavorited Tweet!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                }
+
+                checkConnectivity();
+                Toast.makeText(getBaseContext(), "Failed unfavoriting Tweet!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void postFavorite(String statusId) {
+        client.postFavorite(statusId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(getBaseContext(), "Favorited Tweet!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                }
+
+                checkConnectivity();
+                Toast.makeText(getBaseContext(), "Failed favoriting Tweet!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

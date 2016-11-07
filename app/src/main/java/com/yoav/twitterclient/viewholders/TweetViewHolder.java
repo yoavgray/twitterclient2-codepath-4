@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.like.LikeButton;
 import com.yoav.twitterclient.R;
 
 import butterknife.BindView;
@@ -18,11 +19,16 @@ public class TweetViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.text_view_user_name) TextView userNameTextView;
     @BindView(R.id.text_view_user_nickname) TextView userNicknameTextView;
     @BindView(R.id.text_view_when_published) TextView whenPublishedTextView;
+    @BindView(R.id.favorite_button) LikeButton favoriteButton;
+    @BindView(R.id.retweet_icon) ImageView retweetImageView;
+    //@BindView(R.id.favorites_icon) ImageView favoriteImageView;
     @BindView(R.id.textview_retweets_count) TextView retweetsCountTextView;
     @BindView(R.id.textview_favorites_count) TextView favoritesCountTextView;
     @BindView(R.id.text_view_tweet_body) TextView tweetBodyTextView;
     @BindView(R.id.respond_button) ImageView respondImageView;
     @BindView(R.id.image_view_tweet_embedded_image) ImageView embeddedImageView;
+
+    boolean isRetweeted, isFavorited;
 
     // We also create a constructor that accepts the entire item row
     // and does the view lookups to find each subview
@@ -73,5 +79,33 @@ public class TweetViewHolder extends RecyclerView.ViewHolder{
 
     public RelativeLayout getTweetItemLayout() {
         return tweetItemLayout;
+    }
+
+    public ImageView getRetweetImageView() {
+        return retweetImageView;
+    }
+
+//    public ImageView getFavoriteImageView() {
+//        return favoriteImageView;
+//    }
+
+    public boolean isRetweeted() {
+        return isRetweeted;
+    }
+
+    public boolean isFavorited() {
+        return isFavorited;
+    }
+
+    public void setRetweeted(boolean isRetweeted) {
+        this.isRetweeted = isRetweeted;
+    }
+
+    public void setFavorited(boolean isFavorited) {
+        this.isFavorited = isFavorited;
+    }
+
+    public LikeButton getFavoriteButton() {
+        return favoriteButton;
     }
 }

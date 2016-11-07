@@ -57,6 +57,7 @@ public class MentionsListFragment extends BaseTweetListFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        showProgressBar();
         if (checkConnectivity()) {
             loadMentions();
         } else {
@@ -161,7 +162,7 @@ public class MentionsListFragment extends BaseTweetListFragment {
                 persistToFile(true, tweetsList);
 
                 swipeRefreshLayout.setRefreshing(false);
-                loadingTweetsRelativeLayout.setVisibility(View.GONE);
+                hideProgressBar();
             }
 
             @Override
@@ -172,6 +173,7 @@ public class MentionsListFragment extends BaseTweetListFragment {
                 }
                 swipeRefreshLayout.setRefreshing(false);
                 loadingTweetsRelativeLayout.setVisibility(View.GONE);
+                hideProgressBar();
             }
         });
     }

@@ -4,12 +4,10 @@ import android.text.format.DateUtils;
 
 import com.google.gson.Gson;
 
-import org.apache.commons.lang3.StringUtils;
 import org.parceler.Parcel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 @Parcel
@@ -21,10 +19,14 @@ public class Tweet {
 	private Entities entities;
 	private ExtendedEntities extended_entities;
     private User user;
+    private Boolean favorited;
     private Integer favorite_count;
     private Integer retweet_count;
     private String in_reply_to_screen_name;
     private Tweet retweeted_status;
+    private boolean wasFavorited;
+    private boolean wasUnfavorited;
+    private boolean wasRetweeted;
 
 	public Tweet() {}
 
@@ -36,12 +38,8 @@ public class Tweet {
         return retweet_count;
     }
 
-    public void setFavoriteCount(Integer favorite_count) {
-        this.favorite_count = favorite_count;
-    }
-
-    public void setRetweetCount(Integer retweet_count) {
-        this.retweet_count = retweet_count;
+    public void setFavorited(boolean isFavorited) {
+        favorited = isFavorited;
     }
 
     public String getInReplyToScreenName() {
@@ -78,6 +76,34 @@ public class Tweet {
 
     public String getIdStr() {
         return id_str;
+    }
+
+    public Boolean getFavorited() {
+        return favorited;
+    }
+
+    public boolean getWasFavorited() {
+        return wasFavorited;
+    }
+
+    public void setWasFavorited(boolean wasFavorited) {
+        this.wasFavorited = wasFavorited;
+    }
+
+    public boolean getWasUnfavorited() {
+        return wasUnfavorited;
+    }
+
+    public void setWasUnfavorited(boolean wasUnfavorited) {
+        this.wasUnfavorited = wasUnfavorited;
+    }
+
+    public boolean getWasRetweeted() {
+        return wasRetweeted;
+    }
+
+    public void setWasRetweeted(boolean wasRetweeted) {
+        this.wasRetweeted = wasRetweeted;
     }
 
     public void setName(String name) {

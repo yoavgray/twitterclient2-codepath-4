@@ -72,7 +72,7 @@ public class TweetsListFragment extends BaseTweetListFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 if (checkConnectivity()) {
-                    loadingTweetsRelativeLayout.setVisibility(View.VISIBLE);
+                    showProgressBar();
                     loadTweets();
                 } else {
                     renderConnectionErrorSnackBar(feedRecyclerView);
@@ -90,6 +90,7 @@ public class TweetsListFragment extends BaseTweetListFragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
+                        showProgressBar();
                         if (checkConnectivity()) {
                             maxId = null;
                             loadTweets();
@@ -170,7 +171,7 @@ public class TweetsListFragment extends BaseTweetListFragment {
                 maxId = tweets[tweets.length-1].getIdStr();
 
                 swipeRefreshLayout.setRefreshing(false);
-                loadingTweetsRelativeLayout.setVisibility(View.GONE);
+                hideProgressBar();
             }
 
             @Override
@@ -180,7 +181,7 @@ public class TweetsListFragment extends BaseTweetListFragment {
                     Log.d("ON_FAILURE", errorResponse.toString());
                 }
                 swipeRefreshLayout.setRefreshing(false);
-                loadingTweetsRelativeLayout.setVisibility(View.GONE);
+                hideProgressBar();
             }
         });
     }

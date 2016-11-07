@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.models.User;
-import com.yoav.twitterclient.viewholders.TweetViewHolder;
 import com.yoav.twitterclient.viewholders.UserViewHolder;
 
 import java.util.List;

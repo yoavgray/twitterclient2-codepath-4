@@ -32,17 +32,8 @@ repositories {
 
 apply plugin: 'com.neenbedankt.android-apt'
 
-def dbflow_version = "3.1.1"
-
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    // Picasso for remote image loading
-    // Android Async Http for sending async network requests
-    // DBFlow for simple persistence with an ORM
-    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
-    compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
-
     compile 'com.codepath.libraries:android-oauth-handler:1.1.0'
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
@@ -59,6 +50,7 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'com.github.danylovolokh:list-visibility-utils:0.2.0'
     compile 'com.github.danylovolokh:video-player-manager:0.2.0'
+    compile 'com.github.jd-alexander:LikeButton:0.2.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     apt 'org.parceler:parceler:1.1.6'
 }

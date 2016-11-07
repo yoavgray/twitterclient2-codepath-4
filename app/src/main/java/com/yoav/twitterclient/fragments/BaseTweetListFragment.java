@@ -104,6 +104,29 @@ public abstract class BaseTweetListFragment extends Fragment {
         reloadList();
     }
 
+    public void favoriteTweet(boolean isFavorited, String statusId) {
+        for (int i = 0; i < tweetsList.size(); i++) {
+            Tweet tweet = tweetsList.get(i);
+            if (tweet.getIdStr().equals(statusId)) {
+                tweet.setFavorited(isFavorited);
+                tweet.setWasFavorited(isFavorited);
+                tweetsAdapter.notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
+    public void onRetweetSuccess(String statusId) {
+        for (int i = 0; i < tweetsList.size(); i++) {
+            Tweet tweet = tweetsList.get(i);
+            if (tweet.getIdStr().equals(statusId)) {
+                tweet.setWasRetweeted(true);
+                tweetsAdapter.notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
     public abstract void reloadList();
 
         // TODO: Rename method, update argument and hook method into UI event
@@ -154,5 +177,13 @@ public abstract class BaseTweetListFragment extends Fragment {
         } catch (IOException | InterruptedException e)
         { e.printStackTrace(); }
         return false;
+    }
+
+    protected void showProgressBar() {
+        loadingTweetsRelativeLayout.setVisibility(View.VISIBLE);
+    }
+
+    protected void hideProgressBar() {
+        loadingTweetsRelativeLayout.setVisibility(View.GONE);
     }
 }

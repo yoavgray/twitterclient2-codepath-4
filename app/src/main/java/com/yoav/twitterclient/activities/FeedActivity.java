@@ -182,58 +182,6 @@ public class FeedActivity extends AppCompatActivity {
     }
 
 
-//    @Override
-//    public void onTweetComposed(String screenName, final String tweet) {
-//        if (!checkConnectivity()) {
-//            Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        client.postTweet(tweet, "@" + screenName, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-//                Log.d("POST_TWEET","Success!");
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                super.onFailure(statusCode, headers, throwable, errorResponse);
-//                if (errorResponse != null) {
-//                    Log.d("ON_FAILURE", errorResponse.toString());
-//                }
-//                for (int i = 0; i < tweetsList.size(); i++) {
-//                    Tweet thisTweet = tweetsList.get(i);
-//                    if (thisTweet.getText().equals(tweet)) {
-//                        tweetsList.remove(i);
-//                        tweetsAdapter.notifyItemRemoved(i);
-//                        persistToFile(true, tweetsList);
-//                    }
-//                }
-//
-//                checkConnectivity();
-//                Toast.makeText(getBaseContext(), "Tweet posting failed!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        addNewTweetToList(tweet);
-//    }
-
-    private void addNewTweetToList(String tweet) {
-        Tweet newTweet = new Tweet();
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
-        String formattedDate = df.format(c.getTime());
-        newTweet.setCreatedAt(formattedDate);
-        newTweet.setText(tweet);
-        newTweet.setUser(new User(currentUser == null ? new CurrentUser() : currentUser));
-        newTweet.setEntities(new Entities());
-        newTweet.setExtendedEntities(new ExtendedEntities());
-        newTweet.setFavoriteCount(0);
-        newTweet.setRetweetCount(0);
-        tweetsList.add(0,newTweet);
-        persistToFile(true, tweetsList);
-        tweetsAdapter.notifyItemInserted(0);
-        feedRecyclerView.smoothScrollToPosition(0);
-    }
-
     public void loadTweets(final int page) {
         client.getHomeTimeline("", new JsonHttpResponseHandler() {
             @Override

@@ -10,6 +10,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -29,6 +31,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.TwitterApplication;
 import com.yoav.twitterclient.TwitterClient;
+import com.yoav.twitterclient.adapters.TweetsAdapter;
 import com.yoav.twitterclient.adapters.ViewPagerAdapter;
 import com.yoav.twitterclient.fragments.BaseTweetListFragment;
 import com.yoav.twitterclient.fragments.ComposeTweetFragment;
@@ -49,7 +52,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 
-public class HomeActivity extends AppCompatActivity implements ComposeTweetFragment.TweetComposedListener{
+public class HomeActivity extends AppCompatActivity implements ComposeTweetFragment.TweetComposedListener
+                                                                , TweetsAdapter.OnTweetChangedListener {
     private static final String USER_ID_KEY = "userId";
 
     @BindView(R.id.main_content) CoordinatorLayout mainCoordinatorLayout;
@@ -62,6 +66,7 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
     @BindString(R.string.retry) String retryString;
     @BindString(R.string.cant_compose) String cantComposeString;
 
+    // Instance of the progress action-view
     TwitterClient client;
     CurrentUser currentUser;
     String maxId = null;
@@ -226,6 +231,7 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
             Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
             return;
         }
+        //showProgressBar();
         client.postTweet(tweet, screenName, statusId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -233,6 +239,7 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
                 Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
                 ViewPagerAdapter vpa = (ViewPagerAdapter) viewPager.getAdapter();
                 BaseTweetListFragment tweetsListFragment = (BaseTweetListFragment) vpa.getItem(viewPager.getCurrentItem());
+                //hideProgressBar();
                 tweetsListFragment.addNewTweetToList(tweet);
             }
 
@@ -283,5 +290,95 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
         } catch (IOException | InterruptedException e)
         { e.printStackTrace(); }
         return false;
+    }
+
+    @Override
+    public void onTweetFavorited(boolean isFavorited, String statusId) {
+        if (isFavorited) {
+            postFavorite(statusId);
+        } else {
+            postUnFavorite(statusId);
+        }
+    }
+
+    @Override
+    public void onTweetRetweeted(String statusId) {
+        postRetweeted(statusId);
+    }
+
+    private void postRetweeted(final String statusId) {
+        client.postRetweet(statusId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(getBaseContext(), "Retweeted Tweet!", Toast.LENGTH_SHORT).show();
+                ViewPagerAdapter vpa = (ViewPagerAdapter) viewPager.getAdapter();
+                BaseTweetListFragment tweetsListFragment = (BaseTweetListFragment) vpa.getItem(viewPager.getCurrentItem());
+                Gson gson = new GsonBuilder().create();
+                Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
+                tweetsListFragment.onRetweetSuccess(statusId);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                }
+
+                checkConnectivity();
+                Toast.makeText(getBaseContext(), "Failed Retweeting Tweet!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void postUnFavorite(final String statusId) {
+        client.postunFavorite(statusId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(getBaseContext(), "Unfavorited Tweet!", Toast.LENGTH_SHORT).show();
+                ViewPagerAdapter vpa = (ViewPagerAdapter) viewPager.getAdapter();
+                BaseTweetListFragment tweetsListFragment = (BaseTweetListFragment) vpa.getItem(viewPager.getCurrentItem());
+                Gson gson = new GsonBuilder().create();
+                Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
+                tweetsListFragment.favoriteTweet(false, statusId);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                }
+
+                checkConnectivity();
+                Toast.makeText(getBaseContext(), "Failed unfavoriting Tweet!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void postFavorite(final String statusId) {
+        client.postFavorite(statusId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(getBaseContext(), "Favorited Tweet!", Toast.LENGTH_SHORT).show();
+                ViewPagerAdapter vpa = (ViewPagerAdapter) viewPager.getAdapter();
+                BaseTweetListFragment tweetsListFragment = (BaseTweetListFragment) vpa.getItem(viewPager.getCurrentItem());
+                Gson gson = new GsonBuilder().create();
+                Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
+                tweetsListFragment.favoriteTweet(true, statusId);
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                }
+
+                checkConnectivity();
+                Toast.makeText(getBaseContext(), "Failed favoriting Tweet!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

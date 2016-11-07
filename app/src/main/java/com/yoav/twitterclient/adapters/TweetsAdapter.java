@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.TwitterApplication;
 import com.yoav.twitterclient.activities.ProfileActivity;
@@ -20,6 +22,8 @@ import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.models.Url;
 import com.yoav.twitterclient.models.User;
 import com.yoav.twitterclient.viewholders.TweetViewHolder;
+
+import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.List;
 
@@ -37,6 +41,7 @@ public class TweetsAdapter extends
     // Store a member variable for the contacts
     private List<Tweet> tweets;
     private Context context;
+    private OnTweetChangedListener listener;
 
     // Pass in the contact array into the constructor
     public TweetsAdapter(Context context, List<Tweet> tweets) {
@@ -87,7 +92,16 @@ public class TweetsAdapter extends
         }
     }
 
+
+
     private void configureTweetViewHolder(TweetViewHolder holder, int position) {
+        if (context instanceof OnTweetChangedListener) {
+            listener = (OnTweetChangedListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+
         Tweet tweet = tweets.get(position);
         displayTweetEssentials(holder, tweet);
     }
@@ -119,6 +133,7 @@ public class TweetsAdapter extends
                 getContext().startActivity(intent);
             }
         });
+
         holder.getUserNameTextView().setText(user.getName());
         String nickname = "@" + user.getScreenName();
         holder.getUserNicknameTextView().setText(nickname);
@@ -148,8 +163,46 @@ public class TweetsAdapter extends
         }
 
         holder.getTweetBodyTextView().setText(tweetBody);
+
+        // Check if we got a notification from parent activity that a favorite/retweet event just happened;
         holder.getFavoritesCountTextView().setText(String.valueOf(finalTweet.getFavoriteCount()));
-        holder.getRetweetsCountTextView().setText(String.valueOf(finalTweet.getRetweetCount()));
+        if (finalTweet.getWasRetweeted()) {
+            String newCount = "" + (finalTweet.getRetweetCount() + 1);
+            holder.getRetweetsCountTextView().setText(newCount);
+            finalTweet.setWasRetweeted(false);
+        } else {
+            holder.getRetweetsCountTextView().setText(String.valueOf(finalTweet.getRetweetCount()));
+        }
+
+        // Take care of the favorite button
+        if (BooleanUtils.isTrue(tweet.getFavorited())) {
+            holder.getFavoriteButton().setLiked(true);
+            if (finalTweet.getWasFavorited()) {
+                // Letting the UI know that the number of favorites should be incremented because user favorited
+                String newCount = "" + (finalTweet.getFavoriteCount() + 1);
+                holder.getFavoritesCountTextView().setText(newCount);
+                finalTweet.setWasFavorited(false);
+            }
+        } else {
+            if (finalTweet.getWasUnfavorited()) {
+                // Letting the UI know that the number of favorites should be incremented because user favorited
+                String newCount = "" + (finalTweet.getFavoriteCount() - 1);
+                holder.getFavoritesCountTextView().setText(newCount);
+                finalTweet.setWasUnfavorited(false);
+            }
+            holder.getFavoriteButton().setLiked(false);
+        }
+        holder.getFavoriteButton().setOnLikeListener(new OnLikeListener() {
+            @Override
+            public void liked(LikeButton likeButton) {
+                ((OnTweetChangedListener) context).onTweetFavorited(true, finalTweet.getIdStr());
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+                ((OnTweetChangedListener) context).onTweetFavorited(false, finalTweet.getIdStr());
+            }
+        });
 
         holder.getRespondImageView().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,6 +213,13 @@ public class TweetsAdapter extends
                 composeTweetFragment.show(fm, "fragment_compose");
             }
         });
+        holder.getRetweetImageView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((OnTweetChangedListener) context).onTweetRetweeted(finalTweet.getIdStr());
+            }
+        });
+
         holder.getTweetItemLayout().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,6 +228,11 @@ public class TweetsAdapter extends
                 tweetDetailsFragment.show(fm, "fragment_details");
             }
         });
+    }
+
+    public interface OnTweetChangedListener {
+        public void onTweetFavorited(boolean isFavorited, String statusId);
+        public void onTweetRetweeted(String statusId);
     }
 
 
