@@ -1,7 +1,6 @@
 package com.yoav.twitterclient.models;
 
 import com.google.gson.Gson;
-import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.parceler.Parcel;
 
