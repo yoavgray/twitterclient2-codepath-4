@@ -13,11 +13,13 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.yoav.twitterclient.models.CurrentUser;
 import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.utils.EndlessRecyclerViewScrollListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,22 +37,9 @@ import cz.msebera.android.httpclient.Header;
 public class TweetsListFragment extends BaseTweetListFragment {
     public final static String TWEETS_FILE_NAME = "tweetsFileName";
 
+
     public TweetsListFragment() {
         // Required empty public constructor
-    }
-
-    public static TweetsListFragment newInstance(String param1, String param2) {
-        TweetsListFragment fragment = new TweetsListFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
@@ -162,9 +151,8 @@ public class TweetsListFragment extends BaseTweetListFragment {
                     tweetsAdapter.notifyDataSetChanged();
                     persistToFile(true, tweetsList);
                 } else {
-                    // If page > 1 we want to persist only the new list
                     int listSize = tweetsList.size();
-                    tweetsList.addAll(Arrays.asList(tweets));
+                    tweetsList.addAll(Arrays.asList(tweets).subList(1, tweets.length - 1));
                     tweetsAdapter.notifyItemRangeInserted(listSize,20);
                     persistToFile(false, Arrays.asList(tweets));
                 }

@@ -19,7 +19,7 @@ public class TwitterApplication extends Application {
 	public static final String TIMELINE_KEY = "timeline";
 	public static final String FAVORITES_KEY = "favorites";
 
-	private static Context context;
+    private static Context context;
 
 	@Override
 	public void onCreate() {

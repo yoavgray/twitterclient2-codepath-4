@@ -162,13 +162,18 @@ public class ProfileTweetListFragment extends BaseTweetListFragment {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Gson gson = new GsonBuilder().create();
                 Tweet[] tweets = gson.fromJson(response.toString(), Tweet[].class);
-                // If this is a fresh call, we want to clear the list
+
                 if (maxId == null) {
                     tweetsList.clear();
+                    tweetsList.addAll(Arrays.asList(tweets));
+                    tweetsAdapter.notifyDataSetChanged();
+                } else {
+                    int listSize = tweetsList.size();
+                    tweetsList.addAll(Arrays.asList(tweets).subList(1, tweets.length - 1));
+                    tweetsAdapter.notifyItemRangeInserted(listSize,20);
                 }
                 maxId = tweets[tweets.length-1].getIdStr();
-                tweetsList.addAll(Arrays.asList(tweets));
-                tweetsAdapter.notifyDataSetChanged();
+
                 swipeRefreshLayout.setRefreshing(false);
                 hideProgressBar();
             }
@@ -192,12 +197,18 @@ public class ProfileTweetListFragment extends BaseTweetListFragment {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Gson gson = new GsonBuilder().create();
                 Tweet[] tweets = gson.fromJson(response.toString(), Tweet[].class);
+
                 if (maxId == null) {
                     tweetsList.clear();
+                    tweetsList.addAll(Arrays.asList(tweets));
+                    tweetsAdapter.notifyDataSetChanged();
+                } else {
+                    int listSize = tweetsList.size();
+                    tweetsList.addAll(Arrays.asList(tweets).subList(1, tweets.length - 1));
+                    tweetsAdapter.notifyItemRangeInserted(listSize,20);
                 }
                 maxId = tweets[tweets.length-1].getIdStr();
-                tweetsList.addAll(Arrays.asList(tweets));
-                tweetsAdapter.notifyDataSetChanged();
+
                 swipeRefreshLayout.setRefreshing(false);
                 hideProgressBar();
             }

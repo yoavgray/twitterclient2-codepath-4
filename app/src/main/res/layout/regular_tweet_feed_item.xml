@@ -147,15 +147,6 @@
             tools:text="2,231"
             />
 
-        <!--<ImageView-->
-            <!--android:id="@+id/favorites_icon"-->
-            <!--android:layout_width="12dp"-->
-            <!--android:layout_height="12dp"-->
-            <!--android:src="@drawable/heart"-->
-            <!--android:layout_marginTop="2dp"-->
-            <!--android:layout_marginLeft="30dp"-->
-            <!--/>-->
-
         <com.like.LikeButton
             app:icon_type="heart"
             app:icon_size="12dp"

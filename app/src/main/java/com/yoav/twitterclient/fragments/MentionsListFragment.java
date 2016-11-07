@@ -7,18 +7,17 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.yoav.twitterclient.TwitterApplication;
+import com.yoav.twitterclient.models.CurrentUser;
 import com.yoav.twitterclient.models.Tweet;
 import com.yoav.twitterclient.utils.EndlessRecyclerViewScrollListener;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,31 +25,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+
+import static com.yoav.twitterclient.TwitterApplication.CURRENT_USER_KEY;
 
 public class MentionsListFragment extends BaseTweetListFragment {
     public final static String MENTIONS_FILE_NAME = "mentionsFileName";
 
     public MentionsListFragment() {
         // Required empty public constructor
-    }
-
-    public static MentionsListFragment newInstance(String param1, String param2) {
-        MentionsListFragment fragment = new MentionsListFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
-        client = TwitterApplication.getRestClient();
     }
 
     @Override
@@ -69,7 +56,6 @@ public class MentionsListFragment extends BaseTweetListFragment {
     @Override
     public void setFeedRecyclerView() {
         super.setFeedRecyclerView();
-
         feedRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
@@ -83,7 +69,6 @@ public class MentionsListFragment extends BaseTweetListFragment {
         });
     }
 
-
     /**
      * This method sets the SwipeRefreshLayout on start
      */
@@ -93,7 +78,9 @@ public class MentionsListFragment extends BaseTweetListFragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
+                        showProgressBar();
                         if (checkConnectivity()) {
+                            maxId = null;
                             loadMentions();
                         } else {
                             renderConnectionErrorSnackBar(feedRecyclerView);
@@ -104,6 +91,7 @@ public class MentionsListFragment extends BaseTweetListFragment {
 
     @Override
     public void reloadList() {
+        maxId = null;
         loadMentions();
     }
 
@@ -114,9 +102,6 @@ public class MentionsListFragment extends BaseTweetListFragment {
             public void run() {
                 FileOutputStream outputStream;
                 try {
-//                    if (isNew) {
-//                        clearTweetsFile();
-//                    }
                     outputStream = getContext().openFileOutput(MENTIONS_FILE_NAME, Context.MODE_PRIVATE);
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
                     for (int i = 0; i < newTweets.size(); i++) {
@@ -150,29 +135,31 @@ public class MentionsListFragment extends BaseTweetListFragment {
     }
 
     public void loadMentions() {
-        client.getMentionsTimeline(new JsonHttpResponseHandler() {
+        client.getMentionsTimeline(maxId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Gson gson = new GsonBuilder().create();
                 Tweet[] tweets = gson.fromJson(response.toString(), Tweet[].class);
 
-                tweetsList.clear();
-                tweetsList.addAll(Arrays.asList(tweets));
-                tweetsAdapter.notifyDataSetChanged();
-                persistToFile(true, tweetsList);
-
-                swipeRefreshLayout.setRefreshing(false);
-                hideProgressBar();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                if (errorResponse != null) {
-                    Log.d("ON_FAILURE", errorResponse.toString());
+                if (maxId == null) {
+                    tweetsList.clear();
+                    tweetsList.addAll(Arrays.asList(tweets));
+                    tweetsAdapter.notifyDataSetChanged();
+                    persistToFile(true, tweetsList);
+                } else {
+                    // Now we're adding tweets to a list so we need to just add and not clear
+                    // and also to remove duplicate
+                    int listSize = tweetsList.size();
+                    ArrayList<Tweet> newList = new ArrayList<>(Arrays.asList(tweets));
+                    // Remove duplicate tweet
+                    newList.remove(0);
+                    tweetsList.addAll(newList);
+                    tweetsAdapter.notifyItemRangeInserted(listSize,20);
+                    persistToFile(false, Arrays.asList(tweets));
                 }
+                maxId = tweets[tweets.length-1].getIdStr();
+
                 swipeRefreshLayout.setRefreshing(false);
-                loadingTweetsRelativeLayout.setVisibility(View.GONE);
                 hideProgressBar();
             }
         });

@@ -10,7 +10,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,7 +21,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -169,6 +167,9 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder().create();
                 currentUser = gson.fromJson(response.toString(), CurrentUser.class);
+                ViewPagerAdapter vpa = (ViewPagerAdapter) viewPager.getAdapter();
+                BaseTweetListFragment tweetsListFragment = (BaseTweetListFragment) vpa.getItem(viewPager.getCurrentItem());
+                tweetsListFragment.setCurrentUser(currentUser);
                 getSupportActionBar().setDisplayUseLogoEnabled(true);
                 toolbar.setTitle("@" + currentUser.getScreenName());
             }
@@ -233,7 +234,6 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
             Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
             return;
         }
-        //showProgressBar();
         client.postTweet(tweet, screenName, statusId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -241,7 +241,6 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
                 Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
                 ViewPagerAdapter vpa = (ViewPagerAdapter) viewPager.getAdapter();
                 BaseTweetListFragment tweetsListFragment = (BaseTweetListFragment) vpa.getItem(viewPager.getCurrentItem());
-                //hideProgressBar();
                 tweetsListFragment.addNewTweetToList(tweet);
             }
 
@@ -329,6 +328,34 @@ public class HomeActivity extends AppCompatActivity implements ComposeTweetFragm
 
                 checkConnectivity();
                 Toast.makeText(getBaseContext(), "Failed Retweeting Tweet!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onTweetDeleted(String statusId) {
+        postDeleteTweet(statusId);
+    }
+
+    private void postDeleteTweet(final String statusId) {
+        client.postDeleteTweet(statusId, new JsonHttpResponseHandler() {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(getBaseContext(), "Deleted Tweet!", Toast.LENGTH_SHORT).show();
+                ViewPagerAdapter vpa = (ViewPagerAdapter) viewPager.getAdapter();
+                BaseTweetListFragment tweetsListFragment = (BaseTweetListFragment) vpa.getItem(viewPager.getCurrentItem());
+                Gson gson = new GsonBuilder().create();
+                tweetsListFragment.onDeleteSuccess(statusId);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                }
+
+                checkConnectivity();
+                Toast.makeText(getBaseContext(), "Failed deleting Tweet!", Toast.LENGTH_SHORT).show();
             }
         });
     }

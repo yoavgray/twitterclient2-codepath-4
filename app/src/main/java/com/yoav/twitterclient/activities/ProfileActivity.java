@@ -298,6 +298,34 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
         postRetweeted(statusId);
     }
 
+    @Override
+    public void onTweetDeleted(String statusId) {
+        postDeleteTweet(statusId);
+    }
+
+    private void postDeleteTweet(final String statusId) {
+        client.postDeleteTweet(statusId, new JsonHttpResponseHandler() {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(getBaseContext(), "Deleted Tweet!", Toast.LENGTH_SHORT).show();
+                ViewPagerAdapter vpa = (ViewPagerAdapter) viewPager.getAdapter();
+                BaseTweetListFragment tweetsListFragment = (BaseTweetListFragment) vpa.getItem(viewPager.getCurrentItem());
+                Gson gson = new GsonBuilder().create();
+                tweetsListFragment.onDeleteSuccess(statusId);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                }
+
+                checkConnectivity();
+                Toast.makeText(getBaseContext(), "Failed deleting Tweet!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void postRetweeted(String statusId) {
         client.postRetweet(statusId, new JsonHttpResponseHandler() {
             @Override

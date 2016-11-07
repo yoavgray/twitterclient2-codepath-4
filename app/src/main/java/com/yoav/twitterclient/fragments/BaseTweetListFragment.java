@@ -20,6 +20,7 @@ import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.TwitterApplication;
 import com.yoav.twitterclient.TwitterClient;
 import com.yoav.twitterclient.adapters.TweetsAdapter;
+import com.yoav.twitterclient.models.CurrentUser;
 import com.yoav.twitterclient.models.Tweet;
 
 import java.io.IOException;
@@ -125,6 +126,21 @@ public abstract class BaseTweetListFragment extends Fragment {
                 break;
             }
         }
+    }
+
+    public void onDeleteSuccess(String statusId) {
+        for (int i = 0; i < tweetsList.size(); i++) {
+            Tweet tweet = tweetsList.get(i);
+            if (tweet.getIdStr().equals(statusId)) {
+                tweetsList.remove(i);
+                tweetsAdapter.notifyItemRangeChanged(i, tweetsList.size() - 1);
+                break;
+            }
+        }
+    }
+
+    public void setCurrentUser(CurrentUser currentUser) {
+        tweetsAdapter.setCurrentUser(currentUser);
     }
 
     public abstract void reloadList();

@@ -3,8 +3,9 @@ package com.yoav.twitterclient.adapters;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.yoav.twitterclient.TwitterApplication;
 import com.yoav.twitterclient.activities.ProfileActivity;
 import com.yoav.twitterclient.fragments.ComposeTweetFragment;
 import com.yoav.twitterclient.fragments.TweetDetailsFragment;
+import com.yoav.twitterclient.models.CurrentUser;
 import com.yoav.twitterclient.models.ExtendedEntities;
 import com.yoav.twitterclient.models.Media;
 import com.yoav.twitterclient.models.Tweet;
@@ -44,6 +46,7 @@ public class TweetsAdapter extends
     private final int VIDEO = 0, REGULAR = 1;
 
     // Store a member variable for the contacts
+    private CurrentUser currentUser;
     private List<Tweet> tweets;
     private Context context;
     private OnTweetChangedListener listener;
@@ -52,6 +55,10 @@ public class TweetsAdapter extends
     public TweetsAdapter(Context context, List<Tweet> tweets) {
         this.tweets = tweets;
         this.context = context;
+    }
+
+    public void setCurrentUser(CurrentUser currentUser) {
+        this.currentUser = currentUser;
     }
 
     // Easy access to the context object in the recyclerview
@@ -254,11 +261,36 @@ public class TweetsAdapter extends
                 tweetDetailsFragment.show(fm, "fragment_details");
             }
         });
+
+        holder.getTweetItemLayout().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (currentUser != null && currentUser.getScreenName().equals(user.getScreenName())) {
+                    new AlertDialog.Builder(context, R.style.AlertDialogStyle)
+                            .setTitle("Delete Tweet")
+                            .setMessage("Are you sure you want to delete this Tweet?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ((OnTweetChangedListener) context).onTweetDeleted(finalTweet.getIdStr());
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+                return true;
+            }
+        });
     }
 
     public interface OnTweetChangedListener {
         public void onTweetFavorited(boolean isFavorited, String statusId);
         public void onTweetRetweeted(String statusId);
+        public void onTweetDeleted(String statusId);
     }
 
 
