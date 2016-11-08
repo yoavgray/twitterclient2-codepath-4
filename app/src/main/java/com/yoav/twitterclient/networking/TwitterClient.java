@@ -183,15 +183,10 @@ public class TwitterClient extends OAuthBaseClient {
     public void searchTwitter(String maxId, String query, JsonHttpResponseHandler handler) {
         String apiUrl = getApiUrl("search/tweets.json");
         RequestParams params = new RequestParams();
-        try {
-            if (maxId != null) {
-                params.put("max_id", maxId);
-            }
-            params.put("q", URLEncoder.encode(query, "UTF-8"));
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (maxId != null) {
+            params.put("max_id", maxId);
         }
+        params.put("q", query);
         getClient().get(apiUrl, params, handler);
     }
 }

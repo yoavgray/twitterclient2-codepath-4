@@ -2,6 +2,7 @@ package com.yoav.twitterclient.adapters;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import com.like.OnLikeListener;
 import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.TwitterApplication;
 import com.yoav.twitterclient.activities.ProfileActivity;
+import com.yoav.twitterclient.activities.SearchActivity;
 import com.yoav.twitterclient.fragments.ComposeTweetFragment;
 import com.yoav.twitterclient.fragments.TweetDetailsFragment;
 import com.yoav.twitterclient.models.CurrentUser;
@@ -191,8 +193,10 @@ public class TweetsAdapter extends
                         new PatternEditableBuilder.SpannableClickedListener() {
                             @Override
                             public void onSpanClicked(String text) {
-                                Toast.makeText(getContext(), "Clicked hashtag: " + text,
-                                        Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(getContext(), SearchActivity.class);
+                                i.setAction(Intent.ACTION_SEARCH);
+                                i.putExtra(SearchManager.QUERY, text);
+                                getContext().startActivity(i);
                             }
                         }).into(holder.getTweetBodyTextView());
 

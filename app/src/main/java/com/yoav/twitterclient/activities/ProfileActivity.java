@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -27,6 +26,7 @@ import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yoav.twitterclient.R;
 import com.yoav.twitterclient.TwitterApplication;
+import com.yoav.twitterclient.fragments.ComposeTweetFragment;
 import com.yoav.twitterclient.networking.TwitterClient;
 import com.yoav.twitterclient.adapters.TweetsAdapter;
 import com.yoav.twitterclient.adapters.ViewPagerAdapter;
@@ -55,7 +55,7 @@ import static com.yoav.twitterclient.TwitterApplication.TIMELINE_KEY;
 import static com.yoav.twitterclient.TwitterApplication.USER_ID_KEY;
 import static com.yoav.twitterclient.TwitterApplication.USER_KEY;
 
-public class ProfileActivity extends AppCompatActivity implements ProfileTweetListFragment.OnFragmentInteractionListener,
+public class ProfileActivity extends AppCompatActivity implements ComposeTweetFragment.TweetComposedListener,
         TweetsAdapter.OnTweetChangedListener {
     private static final String FOLLOWING_ARG = "following";
     private static final String FOLLOWERS_ARG = "followers";
@@ -75,6 +75,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
 
     @BindString(R.string.load_tweets_error) String loadTweetsErrorString;
     @BindString(R.string.retry) String retryString;
+    @BindString(R.string.cant_compose) String cantComposeString;
     @BindString(R.string.following) String followingString;
     @BindString(R.string.send_follow_request) String sendFollowRequestString;
 
@@ -234,11 +235,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
                 checkConnectivity();
             }
         });
-
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
     }
 
@@ -469,6 +465,32 @@ public class ProfileActivity extends AppCompatActivity implements ProfileTweetLi
 
                 checkConnectivity();
                 Toast.makeText(getBaseContext(), "Failed favoriting Tweet!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onTweetComposed(String screenName, String statusId, final String tweet) {
+        viewPager.setCurrentItem(0);
+        if (!checkConnectivity()) {
+            Toast.makeText(this, cantComposeString, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        client.postTweet(tweet, statusId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(getBaseContext(), "Posted Tweet!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse != null) {
+                    Log.d("ON_FAILURE", errorResponse.toString());
+                }
+
+                checkConnectivity();
+                Toast.makeText(getBaseContext(), "Tweet posting failed!", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -2,7 +2,7 @@
 
 **Twitoosh** is an android app that allows a user to view home and mentions timelines, view user profiles with user timelines, as well as compose and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **13** hours spent in total
+Time spent: **26** hours spent in total
 
 ## User Stories
 
@@ -29,7 +29,7 @@ The following **optional** features are implemented:
 * [x] User can click on a tweet to be **taken to a "detail view"** of that tweet
  * [x] User can take favorite (and unfavorite) or retweet actions on a tweet
 * [x] Improve the user interface and theme the app to feel twitter branded
-* [ ] User can **search for tweets matching a particular query** and see results
+* [x] User can **search for tweets matching a particular query** and see results
 * [x] Usernames and hashtags are styled and clickable within tweets [using clickable spans](http://guides.codepath.com/android/Working-with-the-TextView#creating-clickable-styled-spans)
 
 The following **bonus** features are implemented:
@@ -42,37 +42,29 @@ The following **bonus** features are implemented:
 The following **additional** features are implemented:
 
 * [x] Mock Twitter like famous Button!
-* [x] Can delete your own tweets! but not others of course :)
+* [x] Users can delete your own tweets! but not others of course :)
+* [x] Users can send Following requests!
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/LX3jEqs.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Most of the time I was busy with refactoring and maintaining working code. I think I did the best job I could with the time I had, and I definitely learned a lot
+about communication between Fragments and Activities.
 
 ## Open-source libraries used
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
 - [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android
-
-## License
-
-    Copyright [yyyy] [name of copyright owner]
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+- [Parceler](https://github.com/johncarl81/parceler) - Android Parcelables made easy through code generation
+- [Glide](http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en) - Image loading and caching library for Android
+- [ButterKnife](http://jakewharton.github.io/butterknife/) - View Binding for android
+- [Gson](https://github.com/google/gson) - Java library that can be used to convert Java Objects into their JSON representation
+- [Wasabeef](https://github.com/wasabeef/glide-transformations) - Tweak images downloaded from Glide!
+- [LikeButton](https://github.com/jd-alexander/LikeButton) - Mocking the famout Tweet Like Button!

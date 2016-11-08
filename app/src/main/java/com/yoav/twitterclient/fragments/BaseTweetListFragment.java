@@ -3,7 +3,6 @@ package com.yoav.twitterclient.fragments;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -46,8 +45,6 @@ public abstract class BaseTweetListFragment extends Fragment {
     protected Unbinder unbinder;
     protected LinearLayoutManager linearLayoutManager;
     protected String maxId = null;
-
-    private OnFragmentInteractionListener mListener;
 
     public BaseTweetListFragment() {
         // Required empty public constructor
@@ -143,34 +140,6 @@ public abstract class BaseTweetListFragment extends Fragment {
     }
 
     public abstract void reloadList();
-
-        // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
 
     /**
      * This method checks connectivity and renders a Snackbar if there's a problem
